@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+@theme {
+  /* 1. Reset Core Palette for the "Engineered Heat" vibe */
+  --color-background-charcoal: #101012;
+  --color-text-light: #F5F5F7;
+  --color-zinc-neutral: #52525B;
+
+  /* 2. Integrate the "Savor Tangerine" as the PRIMARY accent */
+  --color-savor-tangerine: #FF6D00;
+  --color-savor-tangerine-warm: #FB8500;
+  --color-savor-tangerine-gradient-start: #FF5722;
+  --color-savor-tangerine-gradient-end: #FF9800;
+
+  /* 3. Integrate the "Savor shared green" palette */
+  --color-savor-green-dark: #2E7D32;
+  --color-savor-green: #4CAF50;
+
+  /* 4. Define other "Cook in Color" spectrums for hover/detail elements */
+  --color-flavor-lime: #8BC34A;
+  --color-flavor-lime-secondary: #D4E157;
+  --color-flavor-dragonfruit: #E91E8C;
+  --color-flavor-dragonfruit-dark: #AD1457;
+  --color-flavor-watermelon: #E53935;
+  --color-flavor-watermelon-bright: #FF3B3F;
+}
+
+/* Global Reset and Blueprint Layering */
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-background-charcoal);
+  color: var(--color-text-light);
+  font-family: 'Inter', sans-serif; /* A clean sans-serif */
+  -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
+}
