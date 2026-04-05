@@ -1,6 +1,7 @@
 // src/components/Hero.jsx
 import { useState } from 'react';
 import schematicAsset from '../assets/hero2.png';
+import { Link } from 'react-router-dom';
 
 export default function Hero() {
   const [hovered, setHovered] = useState(false);
@@ -109,26 +110,39 @@ export default function Hero() {
           </div>
 
           <p className="text-zinc-400 text-[10px] font-mono uppercase tracking-[0.15em] leading-[2] mb-8">
-            Engineered. Overbuilt.<br/>
-            3.52 lbs of Thermal Mass —<br/>
+            Engineered. Overbuilt.<br />
+            3.52 lbs of Thermal Mass —<br />
             Optimized for the Maillard Reaction.
           </p>
 
           {/* CTAs — full width on mobile */}
           <div className="flex flex-col sm:flex-row gap-3">
-            <button className="w-full sm:w-auto px-8 py-4 bg-white text-black font-black uppercase tracking-widest text-[10px] hover:bg-savor-tangerine hover:text-white transition-all duration-300">
-              Reserve Now
-            </button>
-            <button className="w-full sm:w-auto px-8 py-4 border border-zinc-800 text-zinc-400 font-bold uppercase tracking-widest text-[10px] hover:border-zinc-500 hover:text-white transition-all duration-300 font-mono">
-              Download Schematics →
-            </button>
-          </div>
 
-          {/* Spec pills — scrollable row on mobile */}
-          <div className="flex gap-4 mt-8 overflow-x-auto pb-1 scrollbar-none">
-            {["304 SS", "3.52 lbs", "+/- 0.005\"", "450°F"].map(spec => (
-              <span key={spec} className="text-[8px] font-mono uppercase tracking-widest text-zinc-700 border-b border-zinc-900 pb-1 shrink-0">{spec}</span>
-            ))}
+            {/* PRIMARY — SALES CTA */}
+            <a
+              href="https://ironkitcheninc.com/collections/all"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative w-full sm:w-auto px-8 py-4 bg-savor-tangerine text-white font-black uppercase tracking-widest text-[10px] text-center overflow-hidden transition-all duration-300 hover:bg-savor-tangerine-warm"
+            >
+              {/* industrial heat sweep */}
+              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 group-hover:translate-x-full transition-all duration-700"></span>
+
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                Get Yours — Batch 01
+                <span className="text-[10px] group-hover:translate-x-1 transition-transform duration-200">→</span>
+              </span>
+            </a>
+
+            {/* SECONDARY — SCHEMATICS */}
+            <a
+              href="/blueprints/press-blueprint.pdf"
+              download="IronKitchen_Schematic_SKU-IKI-01.pdf"
+              className="w-full sm:w-auto px-8 py-4 border border-zinc-800 text-zinc-400 font-bold uppercase tracking-widest text-[10px] hover:border-zinc-600 hover:text-white transition-all duration-300 font-mono text-center"
+            >
+              Download Schematics ↓
+            </a>
+
           </div>
         </div>
 

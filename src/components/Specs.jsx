@@ -108,9 +108,13 @@ export default function Specs() {
           <span className="font-mono text-[7px] uppercase tracking-[0.4em] text-zinc-700">
             IKI // Spec Sheet v1.04 // {specs.length} Parameters
           </span>
-          <button className="font-mono text-[9px] uppercase tracking-widest text-zinc-600 hover:text-savor-tangerine transition-colors border-b border-zinc-900 pb-0.5">
+          <a
+            href="/blueprints/press-blueprint.pdf"
+            download="IronKitchen_Schematic_SKU-IKI-01.pdf"
+            className="font-mono text-[9px] uppercase tracking-widest text-zinc-600 hover:text-savor-tangerine transition-colors border-b border-zinc-900 pb-0.5"
+          >
             Download Schematics →
-          </button>
+          </a>
         </div>
 
       </div>

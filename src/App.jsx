@@ -4,6 +4,7 @@ import Hero from './components/Hero';
 import Specs from './components/Specs';
 import BuildLog from './components/BuildLog';
 import Recipes from './components/Recipes';
+import Footer from './components/Footer';
 import TestKitchen from './pages/TestKitchen';
 import ScrollToTop from './components/ScrollToTop';
 
@@ -22,6 +23,7 @@ function App() {
               <Specs />
               <BuildLog />
               <Recipes />
+              <Footer />
             </>
           } />
 

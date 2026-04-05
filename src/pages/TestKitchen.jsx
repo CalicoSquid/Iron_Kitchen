@@ -1,7 +1,5 @@
-/* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
@@ -901,12 +899,12 @@ export default function TestKitchen() {
                     }
                     .tk-tabs {
                         padding: 0 12px;
-                        top: 92px; /* Match your mobile Navbar height here if different from 64px */
+                        top: 96px; /* matches navbar h-24 */
         justify-content: center; /* Center the tabs group */
         z-index: 100; /* Ensure tabs are above other content when centered */
                     }
                     .tk-tab {
-                    flex: 1; /
+                    flex: 1;
                         padding: 11px 12px;
                         font-size: 8px;
                         letter-spacing: .2em;
@@ -1051,13 +1049,14 @@ export default function TestKitchen() {
                 <span className="tk-footer-meta">
                     IKI Test Kitchen // TK Series // Rev 1.0 // 5 Formulas Active // Savor Integration Pending
                 </span>
-                <button
+                <a
+                    href="/test-kitchen"
                     className="tk-footer-cta"
                     onMouseEnter={e => e.currentTarget.style.color = activeRecipe.theme}
                     onMouseLeave={e => e.currentTarget.style.color = "#52525b"}
                 >
                     Open All in Savor →
-                </button>
+                </a>
             </div>
         </div>
     );

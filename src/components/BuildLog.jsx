@@ -230,9 +230,13 @@ export default function BuildLog() {
               <span className="px-2 py-0.5 bg-zinc-900 font-mono text-[7px] uppercase tracking-widest text-zinc-700">{logs.filter(l=>l.status==='QUEUED').length} queued</span>
             </div>
           </div>
-          <button className="font-mono text-[8px] uppercase tracking-widest text-zinc-600 hover:text-savor-tangerine transition-colors border-b border-zinc-900 pb-0.5 whitespace-nowrap">
+          <a
+            href="/blueprints/press-blueprint.pdf"
+            download="IronKitchen_Schematic_SKU-IKI-01.pdf"
+            className="font-mono text-[8px] uppercase tracking-widest text-zinc-600 hover:text-savor-tangerine transition-colors border-b border-zinc-900 pb-0.5 whitespace-nowrap"
+          >
             Download Spec Sheet →
-          </button>
+          </a>
         </div>
 
       </div>

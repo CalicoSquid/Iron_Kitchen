@@ -8,7 +8,7 @@ import iconTangerine from '../assets/icon-Tangerine.png';
 import iconDragonfruit from '../assets/icon-Dragonfruit.png';
 import iconLime from '../assets/icon-Lime.png';
 import iconBerry from '../assets/icon-Blueberry.png';
-import iconSavor from '../assets/icon-Tangerine.png';
+import iconSavor from '../assets/icon-Cranberry.png';
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
@@ -101,9 +101,9 @@ export default function Navbar() {
                         onClick={() => setIsOpen(!isOpen)}
                         className="md:hidden flex flex-col gap-[5px] p-2"
                     >
-                        <div className={`h-px w-6 bg-white transition ${isOpen ? 'rotate-45 translate-y-[7px]' : ''}`} />
+                        <div className={`h-px w-6 bg-flavor-dragonfruit transition ${isOpen ? 'rotate-45 translate-y-[7px]' : ''}`} />
                         <div className={`h-px w-6 bg-savor-tangerine transition ${isOpen ? 'opacity-0' : ''}`} />
-                        <div className={`h-px w-6 bg-white transition ${isOpen ? '-rotate-45 -translate-y-[7px]' : ''}`} />
+                        <div className={`h-px w-6 bg-flavor-lime transition ${isOpen ? '-rotate-45 -translate-y-[7px]' : ''}`} />
                     </button>
                 </div>
             </div>
