@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 
-import imgClassicSmash from '../assets/classic-smash.png';
-import imgDryAged from '../assets/dry-aged-double.png';
-import imgGreenChile from '../assets/green-chile.png';
-import imgTruffle from '../assets/truffle-umami.png';
-import imgBaconSwiss from '../assets/bacon-swiss.png';
+import imgClassicSmash from '../assets/classic-smash-2.png';
+import imgDryAged from '../assets/dry-aged-double-2.png';
+import imgGreenChile from '../assets/green-chile-2.png';
+import imgTruffle from '../assets/truffle-umami-2.png';
+import imgBaconSwiss from '../assets/bacon-swiss-2.png';
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
