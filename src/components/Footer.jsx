@@ -1,4 +1,5 @@
 // src/components/Footer.jsx
+import { Link } from 'react-router-dom';
 import ikLogo from '../assets/logo.png';
 import savorLogo from '../assets/Savor_white.png';
 
@@ -43,18 +44,18 @@ export default function Footer() {
 
         {/* CTA */}
         <div className="flex justify-center mb-16">
-          <a
-            href={SHOP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group relative px-10 py-4 bg-savor-tangerine text-white font-black uppercase tracking-widest text-[10px] overflow-hidden transition-all duration-300 hover:bg-savor-tangerine-warm"
-          >
-            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 group-hover:translate-x-full transition-all duration-700"></span>
-            <span className="relative z-10 flex items-center gap-2">
-              Reserve — Batch 01
-              <span className="group-hover:translate-x-1 transition-transform duration-200">→</span>
-            </span>
-          </a>
+         <Link
+              to="/store"
+              className="group relative w-full sm:w-auto px-8 py-4 bg-savor-tangerine text-white font-black uppercase tracking-widest text-[10px] text-center overflow-hidden transition-all duration-300 hover:bg-savor-tangerine-warm"
+            >
+              {/* industrial heat sweep */}
+              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 group-hover:translate-x-full transition-all duration-700"></span>
+
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                Get Yours — Batch 01
+                <span className="text-[10px] group-hover:translate-x-1 transition-transform duration-200">→</span>
+              </span>
+            </Link>
         </div>
 
         {/* Bottom meta */}
