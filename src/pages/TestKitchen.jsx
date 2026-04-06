@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 
+import imgClassicSmash from '../assets/classic-smash.png';
+import imgDryAged from '../assets/dry-aged-double.png';
+import imgGreenChile from '../assets/green-chile.png';
+import imgTruffle from '../assets/truffle-umami.png';
+import imgBaconSwiss from '../assets/bacon-swiss.png';
+
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 const RECIPES = [
@@ -11,6 +17,7 @@ const RECIPES = [
         sub: "Maximum Maillard Protocol",
         theme: "#FF6D00",
         themeLabel: "Tangerine",
+        image: imgClassicSmash,
         desc: [
             "Baseline formula. Single-smash, high-heat,",
             "no flip until full plate release.",
@@ -64,6 +71,7 @@ const RECIPES = [
         sub: "Fat Render Priority Protocol",
         theme: "#E91E8C",
         themeLabel: "Dragonfruit",
+        image: imgBaconSwiss,
         desc: [
             "Fat render optimization. Reduced press force",
             "prevents premature fat expulsion.",
@@ -116,6 +124,7 @@ const RECIPES = [
         sub: "Moisture Control Protocol",
         theme: "#8BC34A",
         themeLabel: "Lime",
+        image: imgGreenChile,
         desc: [
             "Moisture-critical formula. Hatch chiles roasted,",
             "peeled, and dry-pressed before application.",
@@ -169,6 +178,7 @@ const RECIPES = [
         sub: "Aromatic Compound Protocol",
         theme: "#3B82F6",
         themeLabel: "Blueberry",
+        image: imgTruffle,
         desc: [
             "Umami-forward formula. Mushroom duxelles",
             "as structural topping layer.",
@@ -222,6 +232,7 @@ const RECIPES = [
         sub: "High-Intensity Crust Protocol",
         theme: "#E53935",
         themeLabel: "Watermelon",
+        image: imgDryAged,
         desc: [
             "Advanced formula. Dry-aged trim, double stack.",
             "Sequential smash with 15s recovery between.",
@@ -376,12 +387,45 @@ function RecipePanel({ recipe, visible }) {
         }}>
             {/* ── Top: Identity + Vitals ── */}
             <div className="tk-two-col" style={{ marginBottom: 1 }}>
-                <div className="tk-block">
-                    <div className="tk-label">{recipe.code} // {recipe.themeLabel} Theme // Savor Integration Active</div>
-                    <div className="tk-name" style={{ color: theme }}>{recipe.name[0]}<br />{recipe.name[1]}</div>
-                    <div className="tk-sub">{recipe.sub}</div>
-                    <div className="tk-desc" style={{ borderLeft: `2px solid ${theme}` }}>
-                        {recipe.desc.map((line, i) => <div key={i}>{line}</div>)}
+                <div className="tk-block" style={{ padding: 0, display: 'flex', flexDirection: 'column' }}>
+                    {/* Image */}
+                    {recipe.image && (
+                        <div style={{
+                            width: '100%',
+                            aspectRatio: '4/3',
+                            overflow: 'hidden',
+                            position: 'relative',
+                            flexShrink: 0,
+                        }}>
+                            <img
+                                src={recipe.image}
+                                alt={`${recipe.name[0]} ${recipe.name[1]}`}
+                                style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    objectFit: 'cover',
+                                    objectPosition: 'center',
+                                    display: 'block',
+                                }}
+                            />
+                            {/* Subtle bottom fade into the text block */}
+                            <div style={{
+                                position: 'absolute',
+                                bottom: 0, left: 0, right: 0,
+                                height: '40%',
+                                background: 'linear-gradient(to bottom, transparent, #17171A)',
+                                pointerEvents: 'none',
+                            }} />
+                        </div>
+                    )}
+                    {/* Text */}
+                    <div style={{ padding: '24px 28px', flex: 1 }}>
+                        <div className="tk-label">{recipe.code} // {recipe.themeLabel} Theme // Savor Integration Active</div>
+                        <div className="tk-name" style={{ color: theme }}>{recipe.name[0]}<br />{recipe.name[1]}</div>
+                        <div className="tk-sub">{recipe.sub}</div>
+                        <div className="tk-desc" style={{ borderLeft: `2px solid ${theme}` }}>
+                            {recipe.desc.map((line, i) => <div key={i}>{line}</div>)}
+                        </div>
                     </div>
                 </div>
                 <div className="tk-block">
