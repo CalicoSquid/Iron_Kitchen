@@ -362,6 +362,42 @@ function StepRow({ step, index, theme }) {
     );
 }
 
+const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.calicosquid.savorrecipes";
+
+function SavorButton({ theme }) {
+    const handleOpen = () => {
+        const recipeUrl = encodeURIComponent(window.location.href);
+        const deepLink = `savor://create?url=${recipeUrl}`;
+
+        // Attempt deep link — if app is installed it takes over immediately.
+        // If nothing happens in 1.8s, the page still has focus → send to Play Store.
+        window.location.href = deepLink;
+        const fallback = setTimeout(() => {
+            window.location.href = PLAY_STORE_URL;
+        }, 1800);
+
+        // If the app opened, the page loses visibility — cancel the fallback.
+        const cancel = () => {
+            if (document.hidden) clearTimeout(fallback);
+        };
+        document.addEventListener("visibilitychange", cancel, { once: true });
+    };
+
+    return (
+        <button
+            className="tk-savor-btn"
+            onClick={handleOpen}
+            style={{ borderColor: theme, color: theme }}
+        >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
+                <path d="M12 3C7 3 3 7 3 12s4 9 9 9 9-4 9-9-4-9-9-9z" stroke="currentColor" strokeWidth="1.5" />
+                <path d="M8 12h8M12 8v8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+            Save to Savor
+        </button>
+    );
+}
+
 function RecipePanel({ recipe, visible }) {
     const [mounted, setMounted] = useState(false);
 
@@ -426,6 +462,7 @@ function RecipePanel({ recipe, visible }) {
                         <div className="tk-desc" style={{ borderLeft: `2px solid ${theme}` }}>
                             {recipe.desc.map((line, i) => <div key={i}>{line}</div>)}
                         </div>
+                        <SavorButton theme={theme} />
                     </div>
                 </div>
                 <div className="tk-block">
@@ -859,6 +896,31 @@ export default function TestKitchen() {
                     line-height: 1.7;
                 }
 
+                /* ── Savor Integration (mobile only) ── */
+                .tk-savor-btn {
+                    display: none; /* hidden on desktop */
+                }
+                @media (max-width: 768px) {
+                    .tk-savor-btn {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        margin-top: 20px;
+                        padding: 10px 16px;
+                        font-family: 'IBM Plex Mono', monospace;
+                        font-size: 9px;
+                        text-transform: uppercase;
+                        letter-spacing: .3em;
+                        background: none;
+                        border: 1px solid;
+                        cursor: pointer;
+                        transition: opacity 0.2s;
+                        white-space: nowrap;
+                        width: fit-content;
+                    }
+                    .tk-savor-btn:active { opacity: 0.6; }
+                }
+
                 /* ── Footer ── */
                 .tk-footer {
                     max-width: 1400px;
@@ -1091,16 +1153,20 @@ export default function TestKitchen() {
             {/* Footer */}
             <div className="tk-footer">
                 <span className="tk-footer-meta">
-                    IKI Test Kitchen // TK Series // Rev 1.0 // 5 Formulas Active // Savor Integration Pending
+                    IKI Test Kitchen // TK Series // Rev 1.0 // 5 Formulas Active // Savor Integration Active
                 </span>
-                <a
-                    href="/test-kitchen"
+                <button
                     className="tk-footer-cta"
+                    onClick={() => {
+                        const recipeUrl = encodeURIComponent(window.location.href);
+                        window.location.href = `savor://create?url=${recipeUrl}`;
+                        setTimeout(() => { window.location.href = PLAY_STORE_URL; }, 1800);
+                    }}
                     onMouseEnter={e => e.currentTarget.style.color = activeRecipe.theme}
                     onMouseLeave={e => e.currentTarget.style.color = "#52525b"}
                 >
-                    Open All in Savor →
-                </a>
+                    Open in Savor →
+                </button>
             </div>
         </div>
     );
