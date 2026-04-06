@@ -14,7 +14,9 @@ export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation();
 
-    const SHOP_URL = "/store";
+    const isHome = location.pathname === '/';
+    const isStore = location.pathname === '/store';
+    const isLabMode = location.pathname.includes('kitchen') || location.pathname.includes('protocol');
 
     const getNavIdentity = () => {
         const path = location.pathname;
@@ -37,19 +39,22 @@ export default function Navbar() {
             return { logo: iconSavor, label: 'Savor Kitchen', sub: 'S-A01 // LAB' };
         }
 
+        if (path === '/store') {
+            return { logo: logoLGB, label: 'IKI Store', sub: 'S-A01 // Shop' };
+        }
+
         return { logo: logoLGB, label: 'Iron Kitchen', sub: 'Inc. // S-A01' };
     };
 
     const { logo, label, sub } = getNavIdentity();
-    const isLabMode = location.pathname.includes('kitchen') || location.pathname.includes('protocol');
 
     return (
         <nav className="fixed top-0 w-full z-[999] border-b border-white/[0.04] bg-background-charcoal h-24">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between">
 
                 {/* Logo */}
-                <Link 
-                    to="/" 
+                <Link
+                    to="/"
                     className="flex items-center gap-3 group transition-opacity hover:opacity-80"
                     onClick={() => setIsOpen(false)}
                 >
@@ -70,9 +75,26 @@ export default function Navbar() {
 
                 {/* Desktop Nav */}
                 <div className="hidden md:flex items-center gap-8 font-bold uppercase tracking-[0.25em] text-[9px]">
-                    <NavHashLink smooth to="/#specs" className="text-zinc-500 hover:text-white transition">Specs</NavHashLink>
-                    <NavHashLink smooth to="/#engineering" className="text-zinc-500 hover:text-white transition">Build Log</NavHashLink>
-                    <Link to="/store" className="text-zinc-500 hover:text-white transition">Store</Link>
+
+                    {isHome ? (
+                        <>
+                            <NavHashLink smooth to="/#specs" className="text-zinc-500 hover:text-white transition">Specs</NavHashLink>
+                            <NavHashLink smooth to="/#engineering" className="text-zinc-500 hover:text-white transition">Build Log</NavHashLink>
+                            <Link to="/store" className="text-zinc-500 hover:text-white transition">Store</Link>
+                        </>
+                    ) : (
+                        <>
+                            <Link to="/" className="text-zinc-500 hover:text-white transition flex items-center gap-1.5">
+                                <span className="text-zinc-700">←</span> Home
+                            </Link>
+                            {!isStore && (
+                                <Link to="/store" className="text-zinc-500 hover:text-white transition">Store</Link>
+                            )}
+                            {isStore && (
+                                <NavHashLink smooth to="/#engineering" className="text-zinc-500 hover:text-white transition">Build Log</NavHashLink>
+                            )}
+                        </>
+                    )}
 
                     <div className="w-px h-4 bg-zinc-800"></div>
 
@@ -81,65 +103,58 @@ export default function Navbar() {
                     </NavHashLink>
                 </div>
 
-                {/* CTA + Burger */}
-                <div className="flex items-center gap-3">
-
-                    {/* DESKTOP CTA (hidden on mobile) */}
-                    <Link
-                        to={SHOP_URL}
-                        className="hidden md:block px-5 py-3 border border-zinc-800 bg-zinc-950 
-                        text-[9px] font-mono uppercase tracking-[0.3em] text-zinc-500
-                        hover:text-white hover:border-savor-tangerine hover:bg-zinc-900
-                        transition-all duration-300"
-                    >
-                        Place Order →
-                    </Link>
-
-                    {/* Burger */}
-                    <button
-                        onClick={() => setIsOpen(!isOpen)}
-                        className="md:hidden flex flex-col gap-[5px] p-2"
-                    >
-                        <div className={`h-px w-6 bg-flavor-dragonfruit transition ${isOpen ? 'rotate-45 translate-y-[7px]' : ''}`} />
-                        <div className={`h-px w-6 bg-savor-tangerine transition ${isOpen ? 'opacity-0' : ''}`} />
-                        <div className={`h-px w-6 bg-flavor-lime transition ${isOpen ? '-rotate-45 -translate-y-[7px]' : ''}`} />
-                    </button>
-                </div>
+                {/* Mobile burger */}
+                <button
+                    onClick={() => setIsOpen(!isOpen)}
+                    className="md:hidden flex flex-col gap-[5px] p-2"
+                    aria-label="Toggle menu"
+                >
+                    <div className={`h-px w-6 bg-flavor-dragonfruit transition ${isOpen ? 'rotate-45 translate-y-[7px]' : ''}`} />
+                    <div className={`h-px w-6 bg-savor-tangerine transition ${isOpen ? 'opacity-0' : ''}`} />
+                    <div className={`h-px w-6 bg-flavor-lime transition ${isOpen ? '-rotate-45 -translate-y-[7px]' : ''}`} />
+                </button>
             </div>
 
             {/* Mobile Menu */}
             <div className={`fixed top-24 left-0 w-full bg-background-charcoal z-[999] border-b border-zinc-900 transition-all duration-300 overflow-hidden ${isOpen ? 'max-h-screen' : 'max-h-0'}`}>
                 <div className="flex flex-col px-6 py-6 gap-5">
 
-                    <NavHashLink to="/#specs" smooth onClick={() => setIsOpen(false)} className="font-black uppercase tracking-[0.3em] text-sm text-zinc-400 hover:text-white">
-                        Specs
-                    </NavHashLink>
-
-                    <NavHashLink to="/#engineering" smooth onClick={() => setIsOpen(false)} className="font-black uppercase tracking-[0.3em] text-sm text-zinc-400 hover:text-white">
-                        Build Log
-                    </NavHashLink>
-
-                    <Link to="/store" onClick={() => setIsOpen(false)} className="font-black uppercase tracking-[0.3em] text-sm text-zinc-400 hover:text-white">
-                        Store
-                    </Link>
+                    {isHome ? (
+                        <>
+                            <NavHashLink to="/#specs" smooth onClick={() => setIsOpen(false)} className="font-black uppercase tracking-[0.3em] text-sm text-zinc-400 hover:text-white">
+                                Specs
+                            </NavHashLink>
+                            <NavHashLink to="/#engineering" smooth onClick={() => setIsOpen(false)} className="font-black uppercase tracking-[0.3em] text-sm text-zinc-400 hover:text-white">
+                                Build Log
+                            </NavHashLink>
+                            <Link to="/store" onClick={() => setIsOpen(false)} className="font-black uppercase tracking-[0.3em] text-sm text-zinc-400 hover:text-white">
+                                Store
+                            </Link>
+                        </>
+                    ) : (
+                        <>
+                            <Link to="/" onClick={() => setIsOpen(false)} className="font-black uppercase tracking-[0.3em] text-sm text-zinc-400 hover:text-white flex items-center gap-2">
+                                <span className="text-zinc-600">←</span> Home
+                            </Link>
+                            {!isStore && (
+                                <Link to="/store" onClick={() => setIsOpen(false)} className="font-black uppercase tracking-[0.3em] text-sm text-zinc-400 hover:text-white">
+                                    Store
+                                </Link>
+                            )}
+                            {isStore && (
+                                <NavHashLink to="/#engineering" smooth onClick={() => setIsOpen(false)} className="font-black uppercase tracking-[0.3em] text-sm text-zinc-400 hover:text-white">
+                                    Build Log
+                                </NavHashLink>
+                            )}
+                        </>
+                    )}
 
                     <div className="h-px bg-zinc-900"></div>
 
                     <NavHashLink to="/#recipes" smooth onClick={() => setIsOpen(false)} className="font-black uppercase tracking-[0.3em] text-sm text-savor-tangerine">
-                        Cook in Color
+                        Cook in Color ◆
                     </NavHashLink>
 
-                    {/* MOBILE CTA (styled same system) */}
-                    <Link
-                        to={SHOP_URL}
-                        onClick={() => setIsOpen(false)}
-                        className="mt-2 py-4 border border-zinc-800 bg-zinc-950 
-                        text-[10px] font-mono uppercase tracking-[0.35em] text-zinc-500 text-center
-                        hover:text-white hover:border-savor-tangerine hover:bg-zinc-900
-                        transition-all duration-300"
-                    >
-                        Place Order →
-                    </Link>
                 </div>
             </div>
         </nav>
