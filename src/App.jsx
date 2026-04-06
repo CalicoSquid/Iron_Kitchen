@@ -6,6 +6,7 @@ import BuildLog from './components/BuildLog';
 import Recipes from './components/Recipes';
 import Footer from './components/Footer';
 import TestKitchen from './pages/TestKitchen';
+import Store from './pages/Store';
 import ScrollToTop from './components/ScrollToTop';
 
 function App() {
@@ -16,7 +17,6 @@ function App() {
         <Navbar />
         
         <Routes>
-          {/* Main Landing Page */}
           <Route path="/" element={
             <>
               <Hero />
@@ -26,11 +26,8 @@ function App() {
               <Footer />
             </>
           } />
-
-          {/* Test Kitchen Laboratory */}
+          <Route path="/store" element={<Store />} />
           <Route path="/test-kitchen" element={<TestKitchen />} />
-          
-          {/* Optional: Individual Protocol Views */}
           <Route path="/protocol/:id" element={<TestKitchen />} />
         </Routes>
       </div>

@@ -14,7 +14,7 @@ export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation();
 
-    const SHOP_URL = "https://ironkitcheninc.com/collections/all";
+    const SHOP_URL = "/store";
 
     const getNavIdentity = () => {
         const path = location.pathname;
@@ -72,6 +72,7 @@ export default function Navbar() {
                 <div className="hidden md:flex items-center gap-8 font-bold uppercase tracking-[0.25em] text-[9px]">
                     <NavHashLink smooth to="/#specs" className="text-zinc-500 hover:text-white transition">Specs</NavHashLink>
                     <NavHashLink smooth to="/#engineering" className="text-zinc-500 hover:text-white transition">Build Log</NavHashLink>
+                    <Link to="/store" className="text-zinc-500 hover:text-white transition">Store</Link>
 
                     <div className="w-px h-4 bg-zinc-800"></div>
 
@@ -84,17 +85,15 @@ export default function Navbar() {
                 <div className="flex items-center gap-3">
 
                     {/* DESKTOP CTA (hidden on mobile) */}
-                    <a
-                        href={SHOP_URL}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                    <Link
+                        to={SHOP_URL}
                         className="hidden md:block px-5 py-3 border border-zinc-800 bg-zinc-950 
                         text-[9px] font-mono uppercase tracking-[0.3em] text-zinc-500
                         hover:text-white hover:border-savor-tangerine hover:bg-zinc-900
                         transition-all duration-300"
                     >
                         Place Order →
-                    </a>
+                    </Link>
 
                     {/* Burger */}
                     <button
@@ -120,6 +119,10 @@ export default function Navbar() {
                         Build Log
                     </NavHashLink>
 
+                    <Link to="/store" onClick={() => setIsOpen(false)} className="font-black uppercase tracking-[0.3em] text-sm text-zinc-400 hover:text-white">
+                        Store
+                    </Link>
+
                     <div className="h-px bg-zinc-900"></div>
 
                     <NavHashLink to="/#recipes" smooth onClick={() => setIsOpen(false)} className="font-black uppercase tracking-[0.3em] text-sm text-savor-tangerine">
@@ -127,17 +130,16 @@ export default function Navbar() {
                     </NavHashLink>
 
                     {/* MOBILE CTA (styled same system) */}
-                    <a
-                        href={SHOP_URL}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                    <Link
+                        to={SHOP_URL}
+                        onClick={() => setIsOpen(false)}
                         className="mt-2 py-4 border border-zinc-800 bg-zinc-950 
                         text-[10px] font-mono uppercase tracking-[0.35em] text-zinc-500 text-center
                         hover:text-white hover:border-savor-tangerine hover:bg-zinc-900
                         transition-all duration-300"
                     >
                         Place Order →
-                    </a>
+                    </Link>
                 </div>
             </div>
         </nav>

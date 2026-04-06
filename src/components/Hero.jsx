@@ -119,10 +119,8 @@ export default function Hero() {
           <div className="flex flex-col sm:flex-row gap-3">
 
             {/* PRIMARY — SALES CTA */}
-            <a
-              href="https://ironkitcheninc.com/collections/all"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              to="/store"
               className="group relative w-full sm:w-auto px-8 py-4 bg-savor-tangerine text-white font-black uppercase tracking-widest text-[10px] text-center overflow-hidden transition-all duration-300 hover:bg-savor-tangerine-warm"
             >
               {/* industrial heat sweep */}
@@ -132,7 +130,7 @@ export default function Hero() {
                 Get Yours — Batch 01
                 <span className="text-[10px] group-hover:translate-x-1 transition-transform duration-200">→</span>
               </span>
-            </a>
+            </Link>
 
             {/* SECONDARY — SCHEMATICS */}
             <a

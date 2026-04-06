@@ -24,7 +24,7 @@ const RECIPES = [
     name: 'Classic Smash Burger',
     description: 'Baseline formula. Single-smash, high-heat, no flip until full plate release. Optimized for maximum crust-to-interior ratio.',
     keywords: 'smash burger, IKI, iron kitchen, maillard, TK-001, tangerine',
-    image: 'https://gfs.ca/wp-content/uploads/2024/05/Classic-Smash-Burger-1024x731.png',
+    image: 'https://res.cloudinary.com/dgt586eqo/image/upload/t_smaller/v1775473496/classic-smash_1_pxjbvo.png',
     cookTime: 'PT5M',
     prepTime: 'PT5M',
     totalTime: 'PT10M',
@@ -54,7 +54,7 @@ const RECIPES = [
     name: 'Bacon and Swiss Smash Burger',
     description: 'Fat render optimization. Reduced press force prevents premature fat expulsion. Swiss melt timed to final 10 seconds of dwell. Bacon rendered separately.',
     keywords: 'smash burger, bacon swiss, IKI, iron kitchen, maillard, TK-002, dragonfruit',
-    image: 'https://www.sargento.com/assets/Uploads/Recipe/Image/Sargento_Website_MushroomSwissBurger-v2__FocusFillWyIwLjAwIiwiMC4wMCIsODAwLDQ3OF0_CompressedW10.jpg',
+    image: 'https://res.cloudinary.com/dgt586eqo/image/upload/t_smaller/v1775473369/bacon-swiss_1_heyrzq.png',
     cookTime: 'PT10M',
     prepTime: 'PT10M',
     totalTime: 'PT20M',
@@ -83,7 +83,7 @@ const RECIPES = [
     name: 'Green Chile Smash Burger',
     description: 'Moisture-critical formula. Hatch chiles roasted, peeled, and dry-pressed before application. Pepper jack applied 20 seconds before flip. Steam-tent mandatory.',
     keywords: 'smash burger, green chile, hatch, IKI, iron kitchen, TK-003, lime',
-    image: 'https://sweetcsdesigns.com/wp-content/uploads/2016/08/These-burgers-are-so-delicious-and-full-of-flavor-you-cant-get-enough-.jpg',
+    image: 'https://res.cloudinary.com/dgt586eqo/image/upload/t_smaller/v1775473311/green-chili_1_pejeml.png',
     cookTime: 'PT15M',
     prepTime: 'PT20M',
     totalTime: 'PT35M',
@@ -113,7 +113,7 @@ const RECIPES = [
     name: 'Truffle Umami Smash Burger',
     description: 'Umami-forward formula. Mushroom duxelles as structural topping layer. Truffle oil applied post-press only — high heat volatilizes aromatics.',
     keywords: 'smash burger, truffle, umami, duxelles, IKI, iron kitchen, TK-004, blueberry',
-    image: 'https://media.hellofresh.com/q_100,w_1920,f_auto,c_limit,fl_lossy/recipes/image/5e0fb56c381eb932f756ea17-883cc3c6-a7a28873.jpg',
+    image: 'https://res.cloudinary.com/dgt586eqo/image/upload/t_smaller/v1775473450/truffle-umami_sm5i34.png',
     cookTime: 'PT10M',
     prepTime: 'PT30M',
     totalTime: 'PT40M',
@@ -143,7 +143,7 @@ const RECIPES = [
     name: 'Dry-Aged Double Smash Burger',
     description: 'Advanced formula. 28-day dry-aged trim, double stack. Sequential smash with 15 second recovery between patties. Maximum thermal mass utilization.',
     keywords: 'smash burger, dry aged, double smash, IKI, iron kitchen, TK-005, watermelon',
-    image: 'https://c1.staticflickr.com/5/4850/46390659951_029e5074e9_d.jpg',
+    image: 'https://res.cloudinary.com/dgt586eqo/image/upload/t_smaller/v1775473563/dry-aged-double_wjwj0o.png',
     cookTime: 'PT10M',
     prepTime: 'PT10M',
     totalTime: 'PT20M',
@@ -200,7 +200,7 @@ function buildJsonLd(recipe) {
 
 function injectJsonLd(html, recipe) {
   const jsonLd = buildJsonLd(recipe);
-  const scriptTag = `  <script type="application/ld+json">\n  ${JSON.stringify(jsonLd, null, 2)}\n  <\/script>\n</head>`;
+  const scriptTag = `  <script type="application/ld+json">\n  ${JSON.stringify(jsonLd, null, 2)}\n  </script>\n</head>`;
   return html.replace('</head>', scriptTag);
 }
 
