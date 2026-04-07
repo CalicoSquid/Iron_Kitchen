@@ -364,9 +364,10 @@ function StepRow({ step, index, theme }) {
 
 const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.calicosquid.savorrecipes";
 
-function SavorButton({ theme }) {
+function SavorButton({ theme, activeId }) {
     const handleOpen = () => {
-        const recipeUrl = encodeURIComponent(window.location.href);
+        const canonical = `https://iron-kitchen.netlify.app/protocol/${activeId}`;
+        const recipeUrl = encodeURIComponent(canonical);
         const deepLink = `savor://create?url=${recipeUrl}`;
 
         // Attempt deep link — if app is installed it takes over immediately.
@@ -462,7 +463,7 @@ function RecipePanel({ recipe, visible }) {
                         <div className="tk-desc" style={{ borderLeft: `2px solid ${theme}` }}>
                             {recipe.desc.map((line, i) => <div key={i}>{line}</div>)}
                         </div>
-                        <SavorButton theme={theme} />
+                        <SavorButton theme={theme} activeId={recipe.id} />
                     </div>
                 </div>
                 <div className="tk-block">
@@ -1158,7 +1159,8 @@ export default function TestKitchen() {
                 <button
                     className="tk-footer-cta"
                     onClick={() => {
-                        const recipeUrl = encodeURIComponent(window.location.href);
+                        const canonical = `https://iron-kitchen.netlify.app/protocol/${activeId}`;
+                        const recipeUrl = encodeURIComponent(canonical);
                         window.location.href = `savor://create?url=${recipeUrl}`;
                         setTimeout(() => { window.location.href = PLAY_STORE_URL; }, 1800);
                     }}

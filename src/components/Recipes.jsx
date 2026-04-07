@@ -45,6 +45,16 @@ export default function Recipes() {
             time: "42s",
             notes: "Truffle oil applied post-press. Umami saturation protocol.",
         },
+        {
+            id: "TK-005",
+            name: "Watermelon",
+            color: "#E53935",
+            recipe: "Dry-Aged Double",
+            temp: "450°F",
+            press: "35 lbs ×2",
+            time: "38s",
+            notes: "Sequential smash, 15s recovery between patties. Not for consecutive runs >4.",
+        },
     ];
 
     return (
@@ -126,7 +136,7 @@ export default function Recipes() {
                                 </div>
 
                                 <div className="text-[4.5rem] font-black opacity-[0.15] group-hover:opacity-25 transition"
-                                     style={{ color: formula.color }}>
+                                    style={{ color: formula.color }}>
                                     {formula.name[0]}
                                 </div>
 
@@ -171,10 +181,10 @@ export default function Recipes() {
                 {/* Mobile CTA */}
                 <div className="md:hidden mt-px">
                     <Link
-                        to="/test-kitchen"
+                        to="/protocol/tk001"
                         className="w-full py-4 border border-zinc-800 bg-zinc-950 text-[9px] font-black uppercase tracking-widest text-zinc-500 font-mono hover:text-white hover:border-zinc-600 transition-all block text-center"
                     >
-                        Open All in Savor →
+                        Visit Test Kitchen →
                     </Link>
                 </div>
 
@@ -187,10 +197,10 @@ export default function Recipes() {
                     </div>
 
                     <div className="px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
-                       
+
 
                         <Link
-                            to="/test-kitchen"
+                            to="/protocol/tk001"
                             className="font-mono text-[8px] uppercase tracking-widest text-zinc-600 hover:text-savor-tangerine"
                         >
                             Browse all →
