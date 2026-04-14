@@ -4,7 +4,7 @@ import savorLogo from '../assets/Savor_white.png';
 import imgPress from '../assets/press.png';
 import imgSmash from '../assets/smash.png';
 import imgSlim from '../assets/burger-board.png';
-import imgHero from '../assets/hero2.png';
+import imgHero from '../assets/hero.png';
 
 const STORE_URL = '/store';
 const IKX1_URL  = 'https://ironkitcheninc.com/products/burger-patty-hand-press';
