@@ -1,5 +1,7 @@
 // src/pages/Store.jsx
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import logo from '../assets/logo.png';
 import imgPress from '../assets/press.png';
 import imgSmash from '../assets/smash.png';
 import imgSlim from '../assets/burger-board.png';
@@ -7,355 +9,323 @@ import imgSlider from '../assets/slider-board.png';
 import imgHeart from '../assets/heart-board.png';
 import imgBundle from '../assets/board-bundle.png';
 
-const SHOP_BASE = 'https://ironkitcheninc.com/collections/all'; // fallback
+const IKX1_URL = 'https://ironkitcheninc.com/products/burger-patty-hand-press';
+const IKX3_URL = 'https://ironkitcheninc.com/products/smash-burger-press';
+const BUNDLE_URL = 'https://ironkitcheninc.com/products/patty-board-bundle-press-accessories';
+const SLIM_URL = 'https://ironkitcheninc.com/products/slimpress-patty';
+const SLIDER_URL = 'https://ironkitcheninc.com/products/sliderpress-patty-board';
+const HEART_URL = 'https://ironkitcheninc.com/products/heartpress-patty-board';
 
-// ── Product data ──────────────────────────────────────────────────────────────
-
-const HERO_PRODUCT = {
-  sku: 'IKX1',
-  name: 'Hamburger Patty Hand Press',
-  price: '$949.00',
-  badge: 'Flagship',
-  tag: 'IKX1 // Professional Grade',
-  description: 'The full mechanical system. Lever-actuated, 304 stainless steel construction. 180° travel arc, 4.2× mechanical advantage. Built for consecutive production runs.',
-  specs: [
-    { label: 'Material',   value: '304 SS' },
-    { label: 'Mass',       value: '3.52 lbs' },
-    { label: 'Tolerance',  value: '+/- 0.005"' },
-    { label: 'Lever Arc',  value: '180°' },
-    { label: 'Press Force','value': '147 lbs output' },
-    { label: 'Press Plate','value': '6.0" × 3.0"' },
-  ],
-  url: 'https://ironkitcheninc.com/products/burger-patty-hand-press',
+const C = {
+  cream: '#F5F0E8',
+  creamDark: '#EDE6D6',
+  creamDeep: '#E2D9C8',
+  charcoal: '#1C1C1A',
+  charcoalMid: '#2E2E2B',
+  charcoalSoft: '#3D3D39',
+  amber: '#B8722A',
+  amberLight: '#D4893A',
+  muted: '#7A7468',
+  faint: '#C4BDB0',
+  border: '#D0C8B8',
+  white: '#FDFAF4',
 };
 
-const SECONDARY_PRODUCT = {
-  sku: 'IKX3',
-  name: 'Smash Burger Press',
-  price: '$29.00',
-  badge: 'Entry',
-  tag: 'IKX3 // Manual Press',
-  description: 'Coiled spring handle. Full stainless plate. Designed for single-smash technique on any flat-top surface. No mechanical advantage — raw force, full contact.',
-  specs: [
-    { label: 'Material',   value: '304 SS' },
-    { label: 'Handle',     value: 'Spring coil' },
-    { label: 'Plate',      value: 'Full round' },
-    { label: 'Technique',  value: 'Manual smash' },
-  ],
-  url: 'https://ironkitcheninc.com/products/smash-burger-press',
-};
-
-const BOARD_PRODUCTS = [
-  {
-    sku: 'SPB-SLIM',
-    name: 'SlimPress',
-    sub: 'Patty Board',
-    price: '$65.00',
-    tag: 'Single patty',
-    image: imgSlim,
-    description: 'Single circular cutout. Precision fit for standard 4oz puck. Slots into IKX1 rail system.',
-    url: 'https://ironkitcheninc.com/products/slimpress-patty',
-  },
-  {
-    sku: 'SPB-SLD',
-    name: 'SliderPress',
-    sub: 'Patty Board',
-    price: '$65.00',
-    tag: '4× slider',
-    image: imgSlider,
-    description: 'Four-cutout array for simultaneous slider production. Full rail compatibility.',
-    url: 'https://ironkitcheninc.com/products/sliderpress-patty-board',
-  },
-  {
-    sku: 'SPB-HRT',
-    name: 'HeartPress',
-    sub: 'Patty Board',
-    price: '$65.00',
-    tag: 'Heart form',
-    image: imgHeart,
-    description: 'Heart-form cutout. Same tolerances, same rail fit. For when the occasion calls for it.',
-    url: 'https://ironkitcheninc.com/products/heartpress-patty-board',
-  },
-];
-
-const BUNDLE = {
-  sku: 'SPB-BDL',
-  name: 'Patty Board Bundle',
-  price: '$149.00',
-  saving: 'Save $46',
-  tag: 'All three boards',
-  description: 'SlimPress + SliderPress + HeartPress. Complete patty board system. One SKU, full coverage.',
-  url: 'https://ironkitcheninc.com/products/patty-board-bundle-press-accessories',
-};
-
-// ── Sub-components ────────────────────────────────────────────────────────────
-
-function AddToCartBtn({ url, label = 'Place Order', accent = false }) {
+function Mono({ children, style = {} }) {
   return (
-    <a
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={`group relative overflow-hidden font-black uppercase tracking-widest text-[9px] px-6 py-3 transition-all duration-300 flex items-center justify-center gap-2 ${
-        accent
-          ? 'bg-savor-tangerine text-white hover:bg-savor-tangerine-warm'
-          : 'border border-zinc-800 text-zinc-400 hover:border-zinc-600 hover:text-white'
-      }`}
-    >
-      <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 group-hover:translate-x-full transition-all duration-700" />
-      <span className="relative z-10">{label}</span>
-      <span className="relative z-10 group-hover:translate-x-1 transition-transform duration-200">→</span>
-    </a>
+    <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, letterSpacing: '0.28em', textTransform: 'uppercase', color: C.amber, ...style }}>
+      {children}
+    </span>
   );
 }
 
-function SpecRow({ label, value }) {
+function OrderBtn({ href, primary = true, children = 'Order Now' }) {
+  const [hov, setHov] = useState(false);
   return (
-    <div className="flex items-center justify-between py-2 border-b border-zinc-900 last:border-0">
-      <span className="font-mono text-[7px] uppercase tracking-[0.4em] text-zinc-700">{label}</span>
-      <span className="font-mono text-[9px] text-zinc-400">{value}</span>
+    <a href={href} target="_blank" rel="noopener noreferrer"
+      onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+      style={{
+        display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 32px',
+        background: primary ? (hov ? C.amberLight : C.amber) : (hov ? C.charcoalMid : 'transparent'),
+        border: `2px solid ${primary ? (hov ? C.amberLight : C.amber) : (hov ? C.charcoalMid : 'rgba(28,28,26,0.25)')}`,
+        color: primary ? C.white : C.charcoal,
+        fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900,
+        fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.15em',
+        textDecoration: 'none', transition: 'all 0.25s', flexShrink: 0,
+      }}
+    >{children} →</a>
+  );
+}
+
+function SpecRow({ label, value, dark = false }) {
+  return (
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '10px 0', borderBottom: `1px solid ${dark ? '#252522' : C.border}` }}>
+      <Mono style={{ color: dark ? '#555' : C.faint, fontSize: 8 }}>{label}</Mono>
+      <Mono style={{ fontSize: 9, color: dark ? '#ccc' : C.charcoal }}>{value}</Mono>
     </div>
   );
 }
 
-// ── Main Component ────────────────────────────────────────────────────────────
+// ── Navbar ────────────────────────────────────────────────────────────────────
+function StoreNav() {
+  return (
+    <nav className="responsive-nav">
+      <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10 }}>
+        <img src={logo} alt="Iron Kitchen Inc." style={{ height: 32 }} />
+      </Link>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+        <Link to="/" style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: 12, color: C.muted, textDecoration: 'none', textTransform: 'uppercase', letterSpacing: '0.08em' }}>← Home</Link>
+        <div className="nav-divider" />
+        <Mono className="nav-mono" style={{ color: C.charcoal, fontSize: 9 }}>Lineup // Batch 01</Mono>
+      </div>
+    </nav>
+  );
+}
 
+// ── Page ──────────────────────────────────────────────────────────────────────
 export default function Store() {
-  const [hoveredBoard, setHoveredBoard] = useState(null);
-
-  useEffect(() => {
-          // This specifically forces the window to the top 
-          // only when this component mounts
-          window.scrollTo({
-              top: 0,
-              left: 0,
-              behavior: 'instant' // 'instant' prevents the weird halfway-up "sliding" look
-          });
-      }, []); // Empty dependency array means "only run on page load"
+  useEffect(() => { window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); }, []);
 
   return (
-    <div className="bg-background-charcoal min-h-screen pt-24">
+    <div style={{ background: C.white, minHeight: '100vh' }}>
+      <StoreNav />
 
-      {/* Blueprint grid */}
-      <div className="fixed inset-0 opacity-[0.018] pointer-events-none bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:48px_48px] z-0" />
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pb-24">
-
-        {/* ── Page Header ── */}
-        <div className="py-12 md:py-16 border-b border-zinc-900 mb-12">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-2 h-2 bg-savor-tangerine" />
-            <span className="font-mono text-[9px] uppercase tracking-[0.4em] text-zinc-600">
-              IKI Store // {new Date().getFullYear()} Collection // Shopify Integration Pending
-            </span>
-          </div>
-          <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none">
-            The<br />
-            <span className="text-zinc-700 italic">Arsenal.</span>
+      {/* ── Page Header ── */}
+      <section className="section-padding" style={{ background: C.charcoal, position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 15% 60%, rgba(184,114,42,0.14) 0%, transparent 55%)', pointerEvents: 'none' }} />
+        <div style={{ maxWidth: 1100, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+          <Mono style={{ marginBottom: 20, display: 'block' }}>The Lineup // Batch 01 — 50 Units</Mono>
+          <h1 style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, fontSize: 'clamp(52px, 9vw, 112px)', color: C.white, lineHeight: 0.87, textTransform: 'uppercase', margin: '0 0 28px', letterSpacing: '-0.01em' }}>
+            What<br /><span style={{ color: C.amber, fontStyle: 'italic' }}>We Make.</span>
           </h1>
-          <div className="flex items-center gap-4 mt-5">
-            <div className="h-px w-8 bg-savor-tangerine" />
-            <div className="h-px w-48 bg-zinc-900" />
-          </div>
-        </div>
-
-        {/* ── IKX1 Hero Product ── */}
-        <div className="mb-1 grid md:grid-cols-2 gap-px bg-zinc-900">
-
-          {/* Image panel */}
-          <div className="bg-zinc-950 relative overflow-hidden flex items-center justify-center min-h-[380px] md:min-h-[520px]">
-            {/* Orange glow */}
-            <div className="absolute inset-0 pointer-events-none" style={{
-              background: 'radial-gradient(ellipse at 40% 60%, rgba(255,109,0,0.18) 0%, transparent 65%)',
-            }} />
-            {/* Corner marks */}
-            <div className="absolute top-4 left-4 w-6 h-6 border-l border-t border-zinc-800 z-10" />
-            <div className="absolute top-4 right-4 w-6 h-6 border-r border-t border-zinc-800 z-10" />
-            <div className="absolute bottom-4 left-4 w-6 h-6 border-l border-b border-zinc-800 z-10" />
-            <div className="absolute bottom-4 right-4 w-6 h-6 border-r border-b border-zinc-800 z-10" />
-            <img
-              src={imgPress}
-              alt="IKX1 Hamburger Patty Hand Press"
-              className="relative z-10 w-full h-full object-contain p-8"
-              style={{ filter: 'brightness(0.85) contrast(1.05) grayscale(0.15)' }}
-            />
-            {/* Badge */}
-            <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20">
-              <span className="px-3 py-1 bg-savor-tangerine font-mono text-[7px] uppercase tracking-[0.4em] text-white">
-                Flagship
-              </span>
-            </div>
-          </div>
-
-          {/* Info panel */}
-          <div className="bg-black p-6 md:p-10 flex flex-col justify-between">
-            <div>
-              <div className="flex items-center gap-3 mb-5">
-                <span className="font-mono text-[7px] uppercase tracking-[0.5em] text-zinc-700">{HERO_PRODUCT.tag}</span>
-              </div>
-              <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter leading-[0.9] mb-2">
-                {HERO_PRODUCT.sku}
-              </h2>
-              <h3 className="text-lg md:text-2xl font-black uppercase tracking-tight text-zinc-400 mb-6">
-                {HERO_PRODUCT.name}
-              </h3>
-              <div className="flex items-center gap-4 mb-6">
-                <div className="h-px w-8 bg-savor-tangerine" />
-                <div className="h-px flex-1 bg-zinc-900" />
-              </div>
-              <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-zinc-500 leading-[2] mb-8">
-                {HERO_PRODUCT.description}
-              </p>
-              <div className="mb-8">
-                {HERO_PRODUCT.specs.map(s => <SpecRow key={s.label} {...s} />)}
-              </div>
-            </div>
-            <div className="flex items-center justify-between gap-4 flex-wrap">
-              <span className="font-mono text-2xl font-black text-white">{HERO_PRODUCT.price}</span>
-              <AddToCartBtn url={HERO_PRODUCT.url} label="Place Order" accent />
-            </div>
-          </div>
-        </div>
-
-        {/* ── IKX3 Secondary ── */}
-        <div className="mb-12 grid md:grid-cols-3 gap-px bg-zinc-900">
-
-          {/* Image */}
-          <div className="bg-zinc-950 relative overflow-hidden flex items-center justify-center min-h-[240px]">
-            <div className="absolute inset-0 pointer-events-none" style={{
-              background: 'radial-gradient(ellipse at 50% 60%, rgba(255,109,0,0.1) 0%, transparent 65%)',
-            }} />
-            <img
-              src={imgSmash}
-              alt="IKX3 Smash Burger Press"
-              className="relative z-10 w-full h-full object-contain p-6"
-              style={{ filter: 'brightness(0.85) contrast(1.05) grayscale(0.15)' }}
-            />
-          </div>
-
-          {/* Info */}
-          <div className="md:col-span-2 bg-black p-6 md:p-8 flex flex-col justify-between">
-            <div>
-              <span className="font-mono text-[7px] uppercase tracking-[0.5em] text-zinc-700 block mb-3">{SECONDARY_PRODUCT.tag}</span>
-              <h2 className="text-2xl md:text-4xl font-black uppercase tracking-tighter leading-[0.9] mb-1">{SECONDARY_PRODUCT.sku}</h2>
-              <h3 className="text-base md:text-xl font-black uppercase tracking-tight text-zinc-400 mb-4">{SECONDARY_PRODUCT.name}</h3>
-              <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-zinc-500 leading-[2] mb-5">{SECONDARY_PRODUCT.description}</p>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-zinc-900 mb-5">
-                {SECONDARY_PRODUCT.specs.map(s => (
-                  <div key={s.label} className="bg-black px-3 py-3">
-                    <div className="font-mono text-[7px] uppercase tracking-[0.3em] text-zinc-700 mb-1">{s.label}</div>
-                    <div className="font-mono text-[9px] text-zinc-400">{s.value}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="flex items-center justify-between gap-4 flex-wrap">
-              <span className="font-mono text-xl font-black text-white">{SECONDARY_PRODUCT.price}</span>
-              <AddToCartBtn url={SECONDARY_PRODUCT.url} label="Place Order" />
-            </div>
-          </div>
-        </div>
-
-        {/* ── Patty Boards Header ── */}
-        <div className="mb-6">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-1.5 h-1.5 bg-zinc-700" />
-            <span className="font-mono text-[9px] uppercase tracking-[0.4em] text-zinc-600">Press Accessories // Patty Boards</span>
-          </div>
-          <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter leading-none">
-            The Boards.<br />
-          </h2>
-          <div className="flex items-center gap-4 mt-4">
-            <div className="h-px w-8 bg-zinc-800" />
-            <div className="h-px w-32 bg-zinc-900" />
-          </div>
-        </div>
-
-        {/* ── 3 Boards Grid ── */}
-        <div className="mb-1 grid md:grid-cols-3 gap-px bg-zinc-900">
-          {BOARD_PRODUCTS.map((board, i) => (
-            <div
-              key={board.sku}
-              className="bg-zinc-950 flex flex-col relative overflow-hidden group"
-              onMouseEnter={() => setHoveredBoard(i)}
-              onMouseLeave={() => setHoveredBoard(null)}
-            >
-              {/* Color tint on hover */}
-              <div
-                className="absolute inset-0 pointer-events-none transition-opacity duration-500"
-                style={{
-                  background: 'radial-gradient(ellipse at 50% 50%, rgba(255,109,0,0.08) 0%, transparent 70%)',
-                  opacity: hoveredBoard === i ? 1 : 0,
-                }}
-              />
-
-              {/* Image area */}
-              <div className="relative h-48 flex items-center justify-center border-b border-zinc-900 overflow-hidden">
-                <img
-                  src={board.image}
-                  alt={`${board.name} ${board.sub}`}
-                  className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-105"
-                  style={{ filter: 'brightness(0.85) contrast(1.05) grayscale(0.15)' }}
-                />
-                <span className="absolute top-3 left-3 font-mono text-[7px] uppercase tracking-[0.4em] text-zinc-800">{board.sku}</span>
-                <span className="absolute bottom-3 right-3 font-mono text-[7px] uppercase tracking-[0.3em] text-zinc-800">{board.tag}</span>
-              </div>
-
-              {/* Info */}
-              <div className="p-5 flex flex-col flex-1 justify-between relative z-10">
-                <div>
-                  <h3 className="text-xl font-black uppercase tracking-tight leading-none mb-0.5">{board.name}</h3>
-                  <span className="font-mono text-[8px] uppercase tracking-widest text-zinc-600 block mb-4">{board.sub}</span>
-                  <p className="font-mono text-[8px] uppercase tracking-[0.1em] text-zinc-600 leading-[1.8] mb-5">{board.description}</p>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="font-mono text-base font-black">{board.price}</span>
-                  <AddToCartBtn url={board.url} label="Order" />
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* ── Bundle CTA ── */}
-        <div className="mb-16 bg-zinc-950 border border-zinc-900 border-t-0">
-          {/* Tangerine top accent */}
-          <div className="h-px bg-gradient-to-r from-savor-tangerine via-savor-tangerine-warm to-transparent" />
-
-          <div className="p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-            {/* Bundle image */}
-            <div className="shrink-0 w-24 h-24 flex items-center justify-center">
-              <img src={imgBundle} alt="Patty Board Bundle" className="w-full h-full object-contain" style={{ filter: 'brightness(0.85) contrast(1.05) grayscale(0.15)' }} />
-            </div>
-            <div className="flex-1">
-              <div className="flex items-center gap-3 mb-2">
-                <span className="font-mono text-[7px] uppercase tracking-[0.4em] text-zinc-700">{BUNDLE.tag}</span>
-                <span className="px-2 py-0.5 bg-savor-tangerine/10 border border-savor-tangerine/30 font-mono text-[7px] uppercase tracking-widest text-savor-tangerine">
-                  {BUNDLE.saving}
-                </span>
-              </div>
-              <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tight leading-none mb-2">
-                {BUNDLE.name}
-              </h3>
-              <p className="font-mono text-[8px] uppercase tracking-[0.12em] text-zinc-600 leading-[2]">
-                {BUNDLE.description}
-              </p>
-            </div>
-            <div className="flex items-center gap-6 shrink-0">
-              <span className="font-mono text-2xl font-black text-white">{BUNDLE.price}</span>
-              <AddToCartBtn url={BUNDLE.url} label="Order Bundle" accent />
-            </div>
-          </div>
-        </div>
-
-        {/* ── Shopify note ── */}
-        <div className="border border-zinc-900 bg-zinc-950/50 px-5 py-4 flex items-center gap-3">
-          <div className="w-1.5 h-1.5 bg-zinc-700 shrink-0" />
-          <p className="font-mono text-[7px] uppercase tracking-[0.3em] text-zinc-700">
-            Shopify integration pending // All orders currently fulfilled via ironkitcheninc.com // Native cart + checkout coming at launch
+          <p style={{ fontFamily: 'Barlow, sans-serif', color: 'rgba(245,240,232,0.6)', fontSize: 17, maxWidth: 480, margin: 0, lineHeight: 1.7 }}>
+            Industrial-grade culinary tools. 304 stainless steel. Engineered in Clemmons, NC for high-volume performance.
           </p>
         </div>
+      </section>
 
+      {/* ── IKX1 Flagship ── */}
+      <section className="section-padding" style={{ background: C.white }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 2, background: C.border, outline: `2px solid ${C.amber}`, outlineOffset: -2 }} className="store-grid">
+
+            {/* Image */}
+            <div className="product-image-container" style={{ background: C.charcoal, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+              <div style={{ position: 'absolute', top: 20, left: 24 }}><Mono style={{ color: '#3a3a37' }}>SKU: IKX1-V1</Mono></div>
+              <div style={{ position: 'absolute', top: 20, right: 24 }}>
+                <span style={{ background: C.amber, color: C.white, fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, textTransform: 'uppercase', letterSpacing: '0.3em', padding: '4px 10px' }}>★ Flagship</span>
+              </div>
+              <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 60%, rgba(184,114,42,0.13) 0%, transparent 65%)', pointerEvents: 'none' }} />
+              <img src={imgPress} alt="IKX1" style={{ width: '80%', height: 'auto', maxHeight: 350, objectFit: 'contain', position: 'relative', zIndex: 1, filter: 'brightness(0.92) contrast(1.08)' }} />
+            </div>
+
+            {/* Info */}
+            <div className="product-info-padding" style={{ background: C.white, display: 'flex', flexDirection: 'column' }}>
+              <div style={{ flex: 1 }}>
+                <Mono style={{ marginBottom: 10, display: 'block' }}>Lever-Action Hand Press</Mono>
+                <h2 className="product-title" style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, color: C.charcoal, lineHeight: 0.9, margin: '0 0 8px', textTransform: 'uppercase' }}>IKX1</h2>
+                <div style={{ width: 36, height: 3, background: C.amber, margin: '0 0 28px' }} />
+                <p style={{ fontFamily: 'Barlow, sans-serif', color: C.muted, lineHeight: 1.8, fontSize: 15, marginBottom: 36 }}>
+                  A precision pivot system delivers 147 lbs of force with a single smooth pull — designed for production environments where consistency is the only metric.
+                </p>
+                <div style={{ marginBottom: 40 }}>
+                  <SpecRow label="Mechanical Advantage" value="4.2×" />
+                  <SpecRow label="Output Force" value="147 lbs" />
+                  <SpecRow label="Material" value="304 Stainless" />
+                  <SpecRow label="Tolerance" value='+/- 0.005"' />
+                  <SpecRow label="Total Mass" value="3.52 lbs" />
+                </div>
+              </div>
+              <div className="product-price-row responsive-price-row">
+                <span className="price-tag">$949</span>
+                <OrderBtn href={IKX1_URL}>Order Now</OrderBtn>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── IKX3 ── */}
+      <section className="section-padding" style={{ background: C.cream, borderTop: `1px solid ${C.border}` }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.1fr', gap: 2, background: C.border }} className="store-grid reverse-mobile">
+
+            {/* Info */}
+            <div className="product-info-padding" style={{ background: C.white, display: 'flex', flexDirection: 'column' }}>
+              <div style={{ flex: 1 }}>
+                <Mono style={{ marginBottom: 10, display: 'block' }}>Manual Smash Press</Mono>
+                <h2 className="product-title" style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, color: C.charcoal, lineHeight: 0.9, margin: '0 0 8px', textTransform: 'uppercase' }}>IKX3</h2>
+                <div style={{ width: 36, height: 3, background: C.amber, margin: '0 0 28px' }} />
+                <p style={{ fontFamily: 'Barlow, sans-serif', color: C.muted, lineHeight: 1.8, fontSize: 15, marginBottom: 36 }}>
+                  Heavy-duty manual smash press. Heat-dissipating spring coil handle, high-mass stainless plate. Built to sustain Maillard temps across consecutive smashes.
+                </p>
+                <div style={{ marginBottom: 40 }}>
+                  <SpecRow label="Handle" value="Spring Coil" />
+                  <SpecRow label="Base Plate" value="Full Round" />
+                  <SpecRow label="Material" value="304 Stainless" />
+                  <SpecRow label="Finish" value="CNC Machined" />
+                </div>
+              </div>
+              <div className="product-price-row responsive-price-row">
+                <span className="price-tag">$29</span>
+                <OrderBtn href={IKX3_URL} primary={false}>Order Now</OrderBtn>
+              </div>
+            </div>
+
+            {/* Image */}
+            <div className="product-image-container" style={{ background: C.creamDark, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <img src={imgSmash} alt="IKX3" style={{ width: '75%', height: 'auto', maxHeight: 300, objectFit: 'contain', filter: 'brightness(0.9)' }} />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Patty Boards ── */}
+      <section className="section-padding">
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <div style={{ marginBottom: 48 }}>
+            <Mono style={{ display: 'block', marginBottom: 14 }}>Press Accessories</Mono>
+            <h2 style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, fontSize: 'clamp(40px, 5vw, 64px)', textTransform: 'uppercase', color: C.charcoal, lineHeight: 0.92, margin: 0 }}>
+              The Board<br /><span style={{ color: C.amber, fontStyle: 'italic' }}>System.</span>
+            </h2>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 2, background: C.border, marginBottom: 2 }} className="board-grid">
+            {[
+              { name: 'SlimPress', tag: 'Single Patty', img: imgSlim, desc: 'Single circular cutout. Precision fit for standard 4oz puck. Slots into IKX1.', price: '$65', url: SLIM_URL },
+              { name: 'SliderPress', tag: '4× Array', img: imgSlider, desc: 'Four-cutout array for simultaneous slider production. Full rail compatibility.', price: '$65', url: SLIDER_URL },
+              { name: 'HeartPress', tag: 'Heart Form', img: imgHeart, desc: 'Heart-form cutout. Same tolerances, same rail fit. For when the occasion calls.', price: '$65', url: HEART_URL },
+            ].map(board => (
+              <BoardCard key={board.name} board={board} />
+            ))}
+          </div>
+
+          {/* Bundle */}
+          <div className="bundle-container" style={{ background: C.charcoal, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', borderTop: `3px solid ${C.amber}` }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 24 }} className="bundle-header">
+              <img src={imgBundle} alt="Board Bundle" style={{ height: 80, objectFit: 'contain', filter: 'brightness(1.1)' }} />
+              <div>
+                <Mono style={{ display: 'block', marginBottom: 6 }}>System Bundle — Save $46</Mono>
+                <h3 className="bundle-title" style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, color: C.white, margin: '0 0 4px', textTransform: 'uppercase' }}>Complete Arsenal</h3>
+                <p className="bundle-desc" style={{ fontFamily: 'Barlow, sans-serif', color: C.muted, margin: 0 }}>Slim + Slider + Heart Boards.</p>
+              </div>
+            </div>
+            {/* Bundle Pricing Container */}
+            <div className="bundle-pricing responsive-bundle-pricing" style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+              <div style={{ textAlign: 'left' }}> {/* Explicitly left-aligned */}
+                <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: '#444', textDecoration: 'line-through', letterSpacing: '0.2em', marginBottom: 2 }}>$195</div>
+                <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, fontSize: 36, color: C.white, lineHeight: 1 }}>$149</div>
+              </div>
+              <OrderBtn href={BUNDLE_URL}>Order</OrderBtn>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Footer Logistics ── */}
+      <section style={{ padding: '0 24px 80px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '24px', borderLeft: `4px solid ${C.amber}`, background: C.creamDark }}>
+          <p style={{ fontFamily: 'Barlow, sans-serif', fontSize: 13, color: C.muted, margin: 0, lineHeight: 1.6 }}>
+            <strong style={{ color: C.charcoal, fontWeight: 700 }}>Ordering: </strong>
+            Batch 01 fulfilled via ironkitcheninc.com. Limited to 50 units. Native checkout coming at launch.
+          </p>
+        </div>
+      </section>
+
+      <style>{`
+  .section-padding { padding: 80px 40px; }
+  .product-info-padding { padding: 56px; }
+  .product-image-container { min-height: 480px; }
+  .product-title { font-size: 72px; }
+  .price-tag { font-size: 52px; }
+  .product-price-row { 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    padding-top: 24px; 
+    border-top: 1px solid ${C.border}; 
+  }
+  
+  .responsive-nav { 
+    position: sticky; top: 0; z-index: 999; 
+    background: rgba(245,240,232,0.97); backdrop-filter: blur(10px); 
+    border-bottom: 1px solid ${C.border}; padding: 0 40px; height: 68px; 
+    display: flex; align-items: center; justify-content: space-between; 
+  }
+
+  @media (max-width: 900px) {
+    .section-padding { padding: 60px 24px; }
+    .product-info-padding { padding: 32px; }
+    
+    .responsive-price-row {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 20px;
+    }
+    
+    .responsive-price-row a {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .product-image-container { min-height: 320px; padding: 40px !important; }
+    .product-title { font-size: 48px !important; }
+    .price-tag { font-size: 38px !important; }
+    .store-grid { grid-template-columns: 1fr !important; }
+    .reverse-mobile { display: flex !important; flex-direction: column-reverse !important; }
+    .board-grid { grid-template-columns: 1fr !important; }
+    .responsive-nav { padding: 0 20px; }
+    
+    .bundle-container { padding: 40px 24px; justify-content: flex-start; text-align: left; }
+    
+    /* Audit Fix: Left-shifting the bundle pricing to match the cards */
+    .responsive-bundle-pricing {
+      flex-direction: column !important;
+      align-items: flex-start !important; 
+      gap: 20px;
+      width: 100%;
+    }
+
+    .responsive-bundle-pricing a {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .bundle-header {
+      text-align: left;
+      width: 100%;
+      flex-direction: row !important; /* Keep icon and text side-by-side even on mobile */
+    }
+    
+    .bundle-title {
+      font-size: 26px !important;
+    }
+    
+    .bundle-desc {
+      font-size: 13px !important;
+    }
+  }
+`}</style>
+    </div>
+  );
+}
+
+function BoardCard({ board }) {
+  const [hov, setHov] = useState(false);
+  return (
+    <div style={{ background: C.creamDark, padding: '40px 32px', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ height: 140, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 24 }}>
+        <img src={board.img} alt={board.name} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain', filter: 'grayscale(0.3) contrast(1.1)' }} />
+      </div>
+      <Mono style={{ fontSize: 9, marginBottom: 8 }}>{board.tag}</Mono>
+      <h3 style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, fontSize: 26, color: C.charcoal, margin: '0 0 10px', textTransform: 'uppercase' }}>{board.name}</h3>
+      <p style={{ fontFamily: 'Barlow, sans-serif', fontSize: 13, color: C.muted, lineHeight: 1.6, margin: '0 0 24px', flex: 1 }}>{board.desc}</p>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 20, borderTop: `1px solid ${C.border}` }}>
+        <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, fontSize: 24, color: C.charcoal }}>{board.price}</span>
+        <a href={board.url} target="_blank" rel="noopener noreferrer"
+          onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+          style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.12em', color: hov ? C.amber : C.charcoal, textDecoration: 'none', transition: 'color 0.2s', borderBottom: `2px solid ${hov ? C.amber : C.border}`, paddingBottom: 2 }}
+        >Order →</a>
       </div>
     </div>
   );

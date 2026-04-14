@@ -1121,28 +1121,28 @@ export default function TestKitchen() {
 
             {/* Tabs */}
             <div className="tk-tabs ">
-    {RECIPES.map(r => (
-        <button
-            key={r.id}
-            className="tk-tab"
-            onClick={() => {
-                setActiveId(r.id);
-                // This updates the URL to /protocol/TK001, etc.
-                navigate(`/protocol/${r.id}`); 
-            }}
-            style={{
-                color: activeId === r.id ? "#fff" : "#52525b",
-                borderBottomColor: activeId === r.id ? r.theme : "transparent",
-            }}
-        >
-            <span
-                className="tk-tab-dot"
-                style={{ background: r.theme, opacity: activeId === r.id ? 1 : 0.3 }}
-            />
-            {r.code} <span className="hidden sm:inline">{r.name[0]}</span>
-        </button>
-    ))}
-</div>
+                {RECIPES.map(r => (
+                    <button
+                        key={r.id}
+                        className="tk-tab"
+                        onClick={() => {
+                            setActiveId(r.id);
+                            // This updates the URL to /protocol/TK001, etc.
+                            navigate(`/protocol/${r.id}`);
+                        }}
+                        style={{
+                            color: activeId === r.id ? "#fff" : "#52525b",
+                            borderBottomColor: activeId === r.id ? r.theme : "transparent",
+                        }}
+                    >
+                        <span
+                            className="tk-tab-dot"
+                            style={{ background: r.theme, opacity: activeId === r.id ? 1 : 0.3 }}
+                        />
+                        {r.code} <span className="hidden sm:inline">{r.name[0]}</span>
+                    </button>
+                ))}
+            </div>
 
             {/* Content */}
             <div className="tk-main">

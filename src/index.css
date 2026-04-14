@@ -1,37 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,900;1,700;1,900&family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 
 @theme {
-  /* 1. Reset Core Palette for the "Engineered Heat" vibe */
-  --color-background-charcoal: #101012;
-  --color-text-light: #F5F5F7;
-  --color-zinc-neutral: #52525B;
+  --color-cream: #F5F0E8;
+  --color-cream-dark: #EDE6D6;
+  --color-charcoal: #1C1C1A;
+  --color-charcoal-mid: #2E2E2B;
+  --color-charcoal-soft: #3D3D39;
+  --color-amber: #B8722A;
+  --color-amber-light: #D4893A;
+  --color-rust: #8B3A1E;
+  --color-muted: #7A7468;
+  --color-faint: #C4BDB0;
+  --color-border: #D8D0C0;
+  --color-border-dark: #2A2A27;
 
-  /* 2. Integrate the "Savor Tangerine" as the PRIMARY accent */
-  --color-savor-tangerine: #FF6D00;
-  --color-savor-tangerine-warm: #FB8500;
-  --color-savor-tangerine-gradient-start: #FF5722;
-  --color-savor-tangerine-gradient-end: #FF9800;
-
-  /* 3. Integrate the "Savor shared green" palette */
-  --color-savor-green-dark: #2E7D32;
-  --color-savor-green: #4CAF50;
-
-  /* 4. Define other "Cook in Color" spectrums for hover/detail elements */
-  --color-flavor-lime: #8BC34A;
-  --color-flavor-lime-secondary: #D4E157;
-  --color-flavor-dragonfruit: #E91E8C;
-  --color-flavor-dragonfruit-dark: #AD1457;
-  --color-flavor-watermelon: #E53935;
-  --color-flavor-watermelon-bright: #FF3B3F;
+  /* legacy compat */
+  --color-background-charcoal: #1C1C1A;
+  --color-savor-tangerine: #B8722A;
+  --color-savor-tangerine-warm: #D4893A;
+  --color-red: #B8722A;
+  --color-red-hover: #D4893A;
 }
 
-/* Global Reset and Blueprint Layering */
 html, body {
   margin: 0;
   padding: 0;
-  background-color: var(--color-background-charcoal);
-  color: var(--color-text-light);
-  font-family: 'Inter', sans-serif; /* A clean sans-serif */
+  background-color: #F5F0E8;
+  color: #1C1C1A;
+  font-family: 'Barlow', sans-serif;
   -webkit-font-smoothing: antialiased;
   scroll-behavior: smooth;
 }
+
+* { box-sizing: border-box; }
