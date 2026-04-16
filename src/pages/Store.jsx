@@ -8,283 +8,586 @@ import imgSlider from '../assets/slider-board.png';
 import imgHeart from '../assets/heart-board.png';
 import imgBundle from '../assets/board-bundle.png';
 
-const IKX1_URL   = 'https://ironkitcheninc.com/products/burger-patty-hand-press';
-const IKX3_URL   = 'https://ironkitcheninc.com/products/smash-burger-press';
-const BUNDLE_URL = 'https://ironkitcheninc.com/products/patty-board-bundle-press-accessories';
-const SLIM_URL   = 'https://ironkitcheninc.com/products/slimpress-patty';
-const SLIDER_URL = 'https://ironkitcheninc.com/products/sliderpress-patty-board';
-const HEART_URL  = 'https://ironkitcheninc.com/products/heartpress-patty-board';
-
 const C = {
-  cream:       '#F5F0E8',
-  creamDark:   '#EDE6D6',
-  creamDeep:   '#E2D9C8',
-  charcoal:    '#1C1C1A',
-  charcoalMid: '#2E2E2B',
-  charcoalSoft:'#3D3D39',
-  amber:       '#B8722A',
-  amberLight:  '#D4893A',
-  muted:       '#7A7468',
-  faint:       '#C4BDB0',
-  border:      '#D0C8B8',
-  white:       '#FDFAF4',
+  white:     '#FFFFFF',
+  offwhite:  '#F8F8F6',
+  tile:      '#F2F2EE',
+  steel:     '#E4E4DF',
+  mid:       '#B0AFA8',
+  muted:     '#7A7972',
+  ink:       '#1A1A18',
+  inkLight:  '#2C2C28',
+  black:     '#0D0D0B',
+  red:       '#C41E1E',
+  redHover:  '#A01818',
 };
 
-function Mono({ children, style = {} }) {
+function Label({ children, style = {}, color = C.muted }) {
   return (
-    <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, letterSpacing: '0.28em', textTransform: 'uppercase', color: C.amber, ...style }}>
+    <span style={{ fontFamily: "'DM Mono', 'IBM Plex Mono', monospace", fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', color, ...style }}>
       {children}
     </span>
   );
 }
 
-function OrderBtn({ href, primary = true, children = 'Order Now' }) {
-  const [hov, setHov] = useState(false);
-  return (
-    <a href={href} target="_blank" rel="noopener noreferrer"
-      onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-      style={{
-        display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 32px',
-        background: primary ? (hov ? C.amberLight : C.amber) : (hov ? C.charcoalMid : 'transparent'),
-        border: `2px solid ${primary ? (hov ? C.amberLight : C.amber) : (hov ? C.charcoalMid : 'rgba(28,28,26,0.25)')}`,
-        color: primary ? C.white : C.charcoal,
-        fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900,
-        fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.15em',
-        textDecoration: 'none', transition: 'all 0.25s', flexShrink: 0,
-      }}
-    >{children} →</a>
-  );
-}
+const PRODUCTS = [
+  {
+    id: 'IKX-1',
+    name: 'IKX-1',
+    sub: 'Lever-Action Hand Press',
+    status: 'Flagship',
+    price: '$949',
+    priceNum: 949,
+    img: imgPress,
+    featured: true,
+    desc: 'One smooth pull delivers serious, consistent force — shift after shift, burger after burger. Built for kitchens running volume without cutting corners.',
+    specs: [
+      { k: 'Material', v: '304 SS' },
+      { k: 'Output Force', v: '147 lbs' },
+      { k: 'Plate', v: '6.0″ × 3.0″' },
+      { k: 'Weight', v: '3.52 lbs' },
+      { k: 'Made in', v: 'USA' },
+    ],
+  },
+  {
+    id: 'IKX-3',
+    name: 'IKX-3',
+    sub: 'Manual Smash Press',
+    status: 'Entry',
+    price: '$29',
+    priceNum: 29,
+    img: imgSmash,
+    featured: false,
+    desc: 'No moving parts, no fuss. Heavy spring handle, solid stainless plate. Pick it up and press — the right way to smash a burger.',
+    specs: [
+      { k: 'Material', v: '304 SS' },
+      { k: 'Handle', v: 'Spring coil' },
+      { k: 'Operation', v: 'Manual' },
+      { k: 'Made in', v: 'USA' },
+    ],
+  },
+];
 
-function SpecRow({ label, value }) {
-  return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '10px 0', borderBottom: `1px solid ${C.border}` }}>
-      <span style={{ fontFamily: 'Barlow, sans-serif', fontSize: 13, color: C.muted }}>{label}</span>
-      <Mono style={{ fontSize: 10, color: C.charcoal }}>{value}</Mono>
-    </div>
-  );
-}
+const ACCESSORIES = [
+  {
+    id: 'SLIM',
+    name: 'SlimPress Board',
+    sub: 'Single 4oz patty — IKX-1 rail fit',
+    price: 65,
+    img: imgSlim,
+  },
+  {
+    id: 'SLIDER',
+    name: 'SliderPress Board',
+    sub: '4× simultaneous slider array',
+    price: 65,
+    img: imgSlider,
+  },
+  {
+    id: 'HEART',
+    name: 'HeartPress Board',
+    sub: 'Heart-form cutout — same rail fit',
+    price: 65,
+    img: imgHeart,
+  },
+  {
+    id: 'BUNDLE',
+    name: 'Full Board Bundle',
+    sub: 'All three boards — save $46',
+    price: 149,
+    img: imgBundle,
+    badge: 'Best Value',
+  },
+];
 
-// ── Navbar ────────────────────────────────────────────────────────────────────
-function StoreNav() {
+// ── Nav ───────────────────────────────────────────────────────────────────────
+function StoreNav({ view }) {
+  const steps = ['Select', 'Accessories', 'Confirm'];
+  const stepIndex = view === 'storefront' ? 0 : view === 'upsell' ? 1 : 2;
+
   return (
-    <nav className="responsive-nav">
-      <Link to="/" style={{ textDecoration: 'none' }}>
+    <nav style={{
+      position: 'sticky', top: 0, zIndex: 999,
+      height: 64, background: 'rgba(255,255,255,0.97)', backdropFilter: 'blur(16px)',
+      borderBottom: `1px solid ${C.steel}`,
+      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      padding: '0 40px',
+    }}>
+      <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
         <img src={logo} alt="Iron Kitchen Inc." style={{ height: 34 }} />
       </Link>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-        <Link to="/" style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: 12, color: C.muted, textDecoration: 'none', textTransform: 'uppercase', letterSpacing: '0.08em' }}>← Home</Link>
-        <div className="nav-divider" style={{ width: 1, height: 18, background: C.border }} />
-        <Mono style={{ color: C.charcoal, fontSize: 9 }}>What We Make // Batch 01</Mono>
+
+      {/* Step indicator */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 0 }} className="step-indicator">
+        {steps.map((step, i) => (
+          <div key={step} style={{ display: 'flex', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0 14px' }}>
+              <div style={{
+                width: 20, height: 20,
+                background: i <= stepIndex ? C.ink : 'transparent',
+                border: `1px solid ${i <= stepIndex ? C.ink : C.steel}`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                transition: 'all 0.3s', flexShrink: 0,
+              }}>
+                {i < stepIndex
+                  ? <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={C.white} strokeWidth="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+                  : <Label style={{ fontSize: 9, color: i <= stepIndex ? C.white : C.mid }}>{i + 1}</Label>
+                }
+              </div>
+              <Label color={i <= stepIndex ? C.ink : C.mid}>{step}</Label>
+            </div>
+            {i < steps.length - 1 && <div style={{ width: 20, height: 1, background: i < stepIndex ? C.ink : C.steel, transition: 'background 0.3s' }} />}
+          </div>
+        ))}
       </div>
+
+      <Link to="/" style={{ fontFamily: "'DM Mono', monospace", fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: C.mid, textDecoration: 'none', flexShrink: 0 }}>← Home</Link>
+
+      <style>{`
+        @media (max-width: 640px) {
+          .step-indicator { display: none !important; }
+        }
+      `}</style>
     </nav>
   );
 }
 
-// ── Page ──────────────────────────────────────────────────────────────────────
-export default function Store() {
-  useEffect(() => { window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); }, []);
-
+// ── View 1: Storefront ────────────────────────────────────────────────────────
+function StorefrontView({ onSelect }) {
   return (
-    <div style={{ background: C.white, minHeight: '100vh' }}>
-      <StoreNav />
-
-      {/* ── Page Header ── */}
-      <section className="section-padding" style={{ background: C.charcoal, position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 15% 60%, rgba(184,114,42,0.14) 0%, transparent 55%)', pointerEvents: 'none' }} />
-        <div style={{ maxWidth: 1100, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-          <div style={{ width: 40, height: 4, background: C.amber, marginBottom: 24 }} />
-          <h1 style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, fontSize: 'clamp(52px, 9vw, 112px)', color: C.white, lineHeight: 0.87, textTransform: 'uppercase', margin: '0 0 28px', letterSpacing: '-0.01em' }}>
-            What<br /><span style={{ color: C.amber, fontStyle: 'italic' }}>We Make.</span>
+    <div style={{ background: C.offwhite, minHeight: '100vh', padding: '80px 40px' }} className="store-pad">
+      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+        <div style={{ marginBottom: 64, paddingBottom: 40, borderBottom: `1px solid ${C.steel}` }} className="store-header">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+            <div style={{ width: 2, height: 16, background: C.red }} />
+            <Label>What We Make</Label>
+          </div>
+          <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontWeight: 400, fontSize: 'clamp(48px, 8vw, 96px)', color: C.ink, lineHeight: 0.88, margin: 0, letterSpacing: '0.01em' }}>
+            The Equipment.
           </h1>
-          <p style={{ fontFamily: 'Barlow, sans-serif', color: 'rgba(245,240,232,0.6)', fontSize: 17, maxWidth: 460, margin: 0, lineHeight: 1.75 }}>
-            Tools built to last. Every piece made from food-grade stainless steel, designed in North Carolina, and built to the same standard we'd want in our own kitchen.
-          </p>
         </div>
-      </section>
 
-      {/* ── IKX1 Flagship ── */}
-      <section className="section-padding" style={{ background: C.white }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 2, background: C.border, outline: `2px solid ${C.amber}`, outlineOffset: -2 }} className="store-grid">
-
-            <div className="product-image-container" style={{ background: C.charcoal, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-              <div style={{ position: 'absolute', top: 20, left: 24 }}><Mono style={{ color: '#3a3a37' }}>SKU: IKX1-V1</Mono></div>
-              <div style={{ position: 'absolute', top: 20, right: 24 }}>
-                <span style={{ background: C.amber, color: C.white, fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, textTransform: 'uppercase', letterSpacing: '0.3em', padding: '4px 10px' }}>★ Flagship</span>
-              </div>
-              <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 60%, rgba(184,114,42,0.13) 0%, transparent 65%)', pointerEvents: 'none' }} />
-              <img src={imgPress} alt="IKX1" style={{ width: '80%', height: 'auto', maxHeight: 350, objectFit: 'contain', position: 'relative', zIndex: 1, filter: 'brightness(0.92) contrast(1.08)' }} />
-            </div>
-
-            <div className="product-info-padding" style={{ background: C.white, display: 'flex', flexDirection: 'column' }}>
-              <div style={{ flex: 1 }}>
-                <Mono style={{ marginBottom: 10, display: 'block' }}>Lever-Action Hand Press</Mono>
-                <h2 className="product-title" style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, color: C.charcoal, lineHeight: 0.9, margin: '0 0 8px', textTransform: 'uppercase' }}>IKX1</h2>
-                <div style={{ width: 36, height: 3, background: C.amber, margin: '0 0 28px' }} />
-                <p style={{ fontFamily: 'Barlow, sans-serif', color: C.muted, lineHeight: 1.8, fontSize: 15, marginBottom: 36 }}>
-                  Our flagship press. One smooth pull delivers serious, consistent force — shift after shift, burger after burger. Built for kitchens that run volume without cutting corners.
-                </p>
-                <div style={{ marginBottom: 40 }}>
-                  <SpecRow label="Force output" value="147 lbs" />
-                  <SpecRow label="Material" value="304 Stainless" />
-                  <SpecRow label="Press plate" value='6.0" × 3.0"' />
-                  <SpecRow label="Weight" value="3.52 lbs" />
-                  <SpecRow label="Made in" value="USA" />
-                </div>
-              </div>
-              <div className="product-price-row responsive-price-row">
-                <span className="price-tag" style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, color: C.charcoal, lineHeight: 1 }}>$949</span>
-                <OrderBtn href={IKX1_URL}>Order Now</OrderBtn>
-              </div>
-            </div>
-          </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 2, background: C.steel }} className="prod-grid">
+          {PRODUCTS.map(p => <StorefrontCard key={p.id} product={p} onSelect={onSelect} />)}
         </div>
-      </section>
 
-      {/* ── IKX3 ── */}
-      <section className="section-padding" style={{ background: C.cream, borderTop: `1px solid ${C.border}` }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.1fr', gap: 2, background: C.border }} className="store-grid reverse-mobile">
-
-            <div className="product-info-padding" style={{ background: C.white, display: 'flex', flexDirection: 'column' }}>
-              <div style={{ flex: 1 }}>
-                <Mono style={{ marginBottom: 10, display: 'block' }}>Manual Smash Press</Mono>
-                <h2 className="product-title" style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, color: C.charcoal, lineHeight: 0.9, margin: '0 0 8px', textTransform: 'uppercase' }}>IKX3</h2>
-                <div style={{ width: 36, height: 3, background: C.amber, margin: '0 0 28px' }} />
-                <p style={{ fontFamily: 'Barlow, sans-serif', color: C.muted, lineHeight: 1.8, fontSize: 15, marginBottom: 36 }}>
-                  No moving parts, no fuss. Heavy spring handle, solid stainless plate. Pick it up and press — the right way to smash a burger, at a price that makes sense to start.
-                </p>
-                <div style={{ marginBottom: 40 }}>
-                  <SpecRow label="Operation" value="Manual" />
-                  <SpecRow label="Handle" value="Spring coil" />
-                  <SpecRow label="Plate" value="Full round" />
-                  <SpecRow label="Material" value="304 Stainless" />
-                  <SpecRow label="Made in" value="USA" />
-                </div>
-              </div>
-              <div className="product-price-row responsive-price-row">
-                <span className="price-tag" style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, color: C.charcoal, lineHeight: 1 }}>$29</span>
-                <OrderBtn href={IKX3_URL} primary={false}>Order Now</OrderBtn>
-              </div>
-            </div>
-
-            <div className="product-image-container" style={{ background: C.creamDark, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <img src={imgSmash} alt="IKX3" style={{ width: '75%', height: 'auto', maxHeight: 300, objectFit: 'contain', filter: 'brightness(0.9)' }} />
-            </div>
-          </div>
+        <div style={{ marginTop: 2, background: C.white, padding: '20px 28px', borderLeft: `3px solid ${C.red}`, display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+          <Label color={C.red}>Batch 01</Label>
+          <div style={{ width: 1, height: 14, background: C.steel }} />
+          <Label color={C.muted}>Limited to 50 units — Clemmons, North Carolina</Label>
         </div>
-      </section>
-
-      {/* ── Patty Boards ── */}
-      <section className="section-padding">
-        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-          <div style={{ marginBottom: 48 }}>
-            <div style={{ width: 40, height: 4, background: C.amber, marginBottom: 20 }} />
-            <h2 style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, fontSize: 'clamp(40px, 5vw, 64px)', textTransform: 'uppercase', color: C.charcoal, lineHeight: 0.92, margin: 0 }}>
-              The Board<br /><span style={{ color: C.amber, fontStyle: 'italic' }}>System.</span>
-            </h2>
-            <p style={{ fontFamily: 'Barlow, sans-serif', fontSize: 15, color: C.muted, lineHeight: 1.7, maxWidth: 480, marginTop: 20, marginBottom: 0 }}>
-              Precision-fit boards for the IKX1 rail. Shape your patty before it ever hits the heat — consistent weight, consistent size, every time.
-            </p>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 2, background: C.border, marginBottom: 2 }} className="board-grid">
-            {[
-              { name: 'SlimPress', tag: 'Single Patty', img: imgSlim, desc: 'Single circular cutout. Precision fit for a standard 4oz patty. Slots straight into the IKX1 rail.', price: '$65', url: SLIM_URL },
-              { name: 'SliderPress', tag: '4× Array', img: imgSlider, desc: 'Press four sliders in one motion. Great for high-volume service or catering runs.', price: '$65', url: SLIDER_URL },
-              { name: 'HeartPress', tag: 'Heart Form', img: imgHeart, desc: 'Same tolerances, same rail fit — just a different shape. For when the occasion calls for it.', price: '$65', url: HEART_URL },
-            ].map(board => (
-              <BoardCard key={board.name} board={board} />
-            ))}
-          </div>
-
-          {/* Bundle */}
-          <div className="bundle-container" style={{ background: C.charcoal, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', borderTop: `3px solid ${C.amber}` }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 24 }} className="bundle-header">
-              <img src={imgBundle} alt="Board Bundle" style={{ height: 80, objectFit: 'contain', filter: 'brightness(1.1)', flexShrink: 0 }} />
-              <div>
-                <Mono style={{ display: 'block', marginBottom: 6 }}>Bundle — Save $46</Mono>
-                <h3 className="bundle-title" style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, color: C.white, margin: '0 0 4px', textTransform: 'uppercase' }}>All Three Boards</h3>
-                <p className="bundle-desc" style={{ fontFamily: 'Barlow, sans-serif', color: C.muted, margin: 0, fontSize: 14 }}>SlimPress + SliderPress + HeartPress. One order, full coverage.</p>
-              </div>
-            </div>
-            <div className="bundle-pricing responsive-bundle-pricing" style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-              <div>
-                <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: '#444', textDecoration: 'line-through', letterSpacing: '0.2em', marginBottom: 2 }}>$195</div>
-                <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, fontSize: 36, color: C.white, lineHeight: 1 }}>$149</div>
-              </div>
-              <OrderBtn href={BUNDLE_URL}>Order Bundle</OrderBtn>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Footer note ── */}
-      <section style={{ padding: '0 24px 80px' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '24px 28px', borderLeft: `4px solid ${C.amber}`, background: C.creamDark }}>
-          <p style={{ fontFamily: 'Barlow, sans-serif', fontSize: 14, color: C.muted, margin: 0, lineHeight: 1.7 }}>
-            <strong style={{ color: C.charcoal, fontWeight: 700 }}>Ordering: </strong>
-            All orders are currently fulfilled via ironkitcheninc.com — every button on this page takes you there. Batch 01 is limited to 50 units. Native checkout coming to this site at launch.
-          </p>
-        </div>
-      </section>
+      </div>
 
       <style>{`
-        .section-padding { padding: 80px 40px; }
-        .product-info-padding { padding: 56px; }
-        .product-image-container { min-height: 480px; padding: 64px; }
-        .product-title { font-size: 72px; }
-        .price-tag { font-size: 52px; }
-        .product-price-row { display: flex; align-items: center; justify-content: space-between; padding-top: 24px; border-top: 1px solid ${C.border}; }
-        .bundle-container { padding: 48px 56px; gap: 32px; }
-        .bundle-title { font-size: 28px; }
-        .bundle-desc { font-size: 14px; }
-        .responsive-nav {
-          position: sticky; top: 0; z-index: 999;
-          background: rgba(245,240,232,0.97); backdrop-filter: blur(10px);
-          border-bottom: 1px solid ${C.border}; padding: 0 40px; height: 68px;
-          display: flex; align-items: center; justify-content: space-between;
-        }
-        @media (max-width: 900px) {
-          .section-padding { padding: 60px 20px; }
-          .product-info-padding { padding: 28px; }
-          .product-image-container { min-height: 280px; padding: 40px !important; }
-          .product-title { font-size: 48px !important; }
-          .price-tag { font-size: 38px !important; }
-          .store-grid { grid-template-columns: 1fr !important; }
-          .reverse-mobile { display: flex !important; flex-direction: column-reverse !important; }
-          .board-grid { grid-template-columns: 1fr !important; }
-          .responsive-nav { padding: 0 20px; }
-          .bundle-container { padding: 32px 24px !important; }
-          .bundle-title { font-size: 22px !important; }
-          .responsive-price-row { flex-direction: column !important; align-items: flex-start !important; gap: 16px; }
-          .responsive-price-row a { width: 100%; justify-content: center; }
-          .responsive-bundle-pricing { flex-direction: column !important; align-items: flex-start !important; gap: 16px; width: 100%; }
-          .responsive-bundle-pricing a { width: 100%; justify-content: center; }
+        @media (max-width: 768px) {
+          .store-pad { padding: 48px 20px !important; }
+          .store-header { margin-bottom: 40px !important; padding-bottom: 32px !important; }
+          .prod-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </div>
   );
 }
 
-function BoardCard({ board }) {
+function StorefrontCard({ product, onSelect }) {
   const [hov, setHov] = useState(false);
   return (
-    <div style={{ background: C.creamDark, padding: '36px 32px', display: 'flex', flexDirection: 'column' }}>
-      <div style={{ height: 140, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 24 }}>
-        <img src={board.img} alt={board.name} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain', filter: 'grayscale(0.2) contrast(1.1)' }} />
+    <div
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        background: product.featured ? C.ink : C.white,
+        display: 'flex', flexDirection: 'column',
+        transition: 'box-shadow 0.3s',
+        boxShadow: hov ? '0 24px 48px rgba(0,0,0,0.12)' : 'none',
+        outline: product.featured ? `2px solid ${C.red}` : 'none',
+        outlineOffset: -2,
+      }}
+    >
+      <div style={{ height: 280, background: product.featured ? '#181816' : C.tile, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 40, position: 'relative' }}
+        className="card-img"
+      >
+        <div style={{ position: 'absolute', top: 16, left: 20 }}>
+          <Label color={product.featured ? 'rgba(255,255,255,0.25)' : C.mid}>{product.id}</Label>
+        </div>
+        <div style={{ position: 'absolute', top: 16, right: 20 }}>
+          <span style={{ background: product.featured ? C.red : C.steel, color: product.featured ? C.white : C.muted, fontFamily: "'DM Mono', monospace", fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', padding: '3px 10px' }}>{product.status}</span>
+        </div>
+        {product.featured && <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 60%, rgba(196,30,30,0.1) 0%, transparent 65%)', pointerEvents: 'none' }} />}
+        <img src={product.img} alt={product.name}
+          style={{
+            maxHeight: '100%', maxWidth: '100%', objectFit: 'contain',
+            filter: product.featured ? 'brightness(0.9) contrast(1.1)' : 'none',
+            transition: 'transform 0.4s',
+            transform: hov ? 'scale(1.04)' : 'scale(1)',
+          }}
+        />
       </div>
-      <Mono style={{ fontSize: 9, marginBottom: 8 }}>{board.tag}</Mono>
-      <h3 style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, fontSize: 26, color: C.charcoal, margin: '0 0 10px', textTransform: 'uppercase' }}>{board.name}</h3>
-      <p style={{ fontFamily: 'Barlow, sans-serif', fontSize: 13, color: C.muted, lineHeight: 1.7, margin: '0 0 24px', flex: 1 }}>{board.desc}</p>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 20, borderTop: `1px solid ${C.border}` }}>
-        <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, fontSize: 24, color: C.charcoal }}>{board.price}</span>
-        <a href={board.url} target="_blank" rel="noopener noreferrer"
-          onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-          style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.12em', color: hov ? C.amber : C.charcoal, textDecoration: 'none', transition: 'color 0.2s', borderBottom: `2px solid ${hov ? C.amber : C.border}`, paddingBottom: 2 }}
-        >Order →</a>
+
+      <div style={{ padding: '32px 28px', flex: 1, display: 'flex', flexDirection: 'column' }} className="card-body">
+        <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontWeight: 400, fontSize: 52, color: product.featured ? C.white : C.ink, margin: '0 0 2px', letterSpacing: '0.02em', lineHeight: 1 }}>{product.name}</h2>
+        <Label color={product.featured ? 'rgba(255,255,255,0.3)' : C.mid} style={{ display: 'block', marginBottom: 16 }}>{product.sub}</Label>
+        <p style={{ fontFamily: 'system-ui, sans-serif', fontSize: 14, color: product.featured ? 'rgba(255,255,255,0.45)' : C.muted, lineHeight: 1.8, margin: '0 0 28px', flex: 1 }}>{product.desc}</p>
+
+        <div style={{ marginBottom: 28 }}>
+          {product.specs.map((s, i) => (
+            <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderTop: `1px solid ${product.featured ? 'rgba(255,255,255,0.07)' : C.steel}` }}>
+              <Label color={product.featured ? 'rgba(255,255,255,0.2)' : C.mid}>{s.k}</Label>
+              <Label color={product.featured ? 'rgba(255,255,255,0.6)' : C.inkLight} style={{ fontSize: 11 }}>{s.v}</Label>
+            </div>
+          ))}
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 24, borderTop: `1px solid ${product.featured ? 'rgba(255,255,255,0.1)' : C.steel}`, gap: 12, flexWrap: 'wrap' }}>
+          <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 48, color: product.featured ? C.white : C.ink, lineHeight: 1, letterSpacing: '0.02em' }}>{product.price}</span>
+          <SelectBtn onClick={() => onSelect(product)} featured={product.featured}>
+            {product.id === 'IKX-1' ? 'Configure & Order' : 'Order Now'} →
+          </SelectBtn>
+        </div>
       </div>
+    </div>
+  );
+}
+
+function SelectBtn({ onClick, featured, children, style = {} }) {
+  const [hov, setHov] = useState(false);
+  return (
+    <button onClick={onClick}
+      onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+      style={{
+        padding: '13px 24px',
+        background: featured ? (hov ? C.redHover : C.red) : (hov ? C.inkLight : C.ink),
+        color: C.white, border: 'none', cursor: 'pointer',
+        fontFamily: "'DM Mono', 'IBM Plex Mono', monospace",
+        fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase',
+        transition: 'background 0.2s', flexShrink: 0,
+        minHeight: 44,
+        ...style,
+      }}
+    >{children}</button>
+  );
+}
+
+// ── View 2: Upsell ────────────────────────────────────────────────────────────
+function UpsellView({ baseProduct, selected, onToggle, onContinue, onBack }) {
+  const selectedTotal = selected.reduce((sum, id) => {
+    const acc = ACCESSORIES.find(a => a.id === id);
+    return sum + (acc ? acc.price : 0);
+  }, 0);
+
+  return (
+    <div style={{ background: C.offwhite, minHeight: '100vh' }}>
+      {/* Top banner */}
+      <div style={{ background: C.ink, padding: '28px 40px', borderBottom: `2px solid ${C.red}` }} className="upsell-banner">
+        <div style={{ maxWidth: 860, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <div style={{ width: 44, height: 44, background: C.red, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.white} strokeWidth="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+            </div>
+            <div>
+              <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 26, color: C.white, lineHeight: 1, letterSpacing: '0.02em' }}>IKX-1 Added to Your Order</div>
+              <Label color="rgba(255,255,255,0.35)">Complete your press system before checkout</Label>
+            </div>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <Label color="rgba(255,255,255,0.3)" style={{ display: 'block', marginBottom: 4 }}>Press subtotal</Label>
+            <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 32, color: C.white, lineHeight: 1, letterSpacing: '0.02em' }}>{baseProduct.price}</div>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ maxWidth: 860, margin: '0 auto', padding: '64px 40px' }} className="upsell-pad">
+        <div style={{ marginBottom: 48 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+            <div style={{ width: 2, height: 16, background: C.red }} />
+            <Label>Complete Your System</Label>
+          </div>
+          <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontWeight: 400, fontSize: 'clamp(44px, 6vw, 72px)', color: C.ink, lineHeight: 0.88, margin: '0 0 16px', letterSpacing: '0.01em' }}>
+            Add Rail Boards.
+          </h2>
+          <p style={{ fontFamily: 'system-ui, sans-serif', fontSize: 15, color: C.muted, lineHeight: 1.7, maxWidth: 520, margin: 0 }}>
+            The IKX-1 rail system accepts precision-fit boards for consistent patty forming before the press. Ships with your order.
+          </p>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 2, marginBottom: 32 }}>
+          {ACCESSORIES.map(acc => {
+            const isSelected = selected.includes(acc.id);
+            return (
+              <div key={acc.id} onClick={() => onToggle(acc.id)}
+                style={{
+                  background: isSelected ? C.white : C.tile,
+                  border: `1px solid ${isSelected ? C.ink : C.steel}`,
+                  padding: '20px 20px',
+                  cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', gap: 16,
+                  transition: 'all 0.2s',
+                  outline: isSelected ? `2px solid ${C.red}` : 'none',
+                  outlineOffset: -2,
+                  minHeight: 80,
+                }}
+              >
+                {/* Checkbox */}
+                <div style={{
+                  width: 22, height: 22, minWidth: 22,
+                  background: isSelected ? C.red : 'transparent',
+                  border: `1px solid ${isSelected ? C.red : C.steel}`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  transition: 'all 0.2s',
+                }}>
+                  {isSelected && <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={C.white} strokeWidth="3"><path d="M20 6L9 17l-5-5"/></svg>}
+                </div>
+
+                {/* Image */}
+                <div style={{ width: 52, height: 52, minWidth: 52, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <img src={acc.img} alt={acc.name} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', filter: 'grayscale(0.2)' }} />
+                </div>
+
+                {/* Info */}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3, flexWrap: 'wrap' }}>
+                    <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 20, color: C.ink, letterSpacing: '0.02em', lineHeight: 1 }}>{acc.name}</span>
+                    {acc.badge && <span style={{ background: C.red, color: C.white, fontFamily: "'DM Mono', monospace", fontSize: 8, letterSpacing: '0.2em', textTransform: 'uppercase', padding: '2px 8px', flexShrink: 0 }}>{acc.badge}</span>}
+                  </div>
+                  <Label color={C.muted} style={{ fontSize: 9 }}>{acc.sub}</Label>
+                </div>
+
+                {/* Price */}
+                <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                  <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 26, color: isSelected ? C.red : C.ink, letterSpacing: '0.02em', lineHeight: 1, transition: 'color 0.2s' }}>+${acc.price}</div>
+                  <Label color={isSelected ? C.red : C.mid} style={{ fontSize: 9 }}>{isSelected ? 'Selected ✓' : 'Add'}</Label>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Summary + CTA */}
+        <div style={{ background: C.white, border: `1px solid ${C.steel}`, padding: '24px 20px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
+            <div>
+              {selected.length === 0
+                ? <Label color={C.mid}>No accessories selected</Label>
+                : <div>
+                    <Label color={C.muted} style={{ display: 'block', marginBottom: 4 }}>{selected.length} accessory{selected.length > 1 ? 's' : ''} added</Label>
+                    <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 28, color: C.ink, letterSpacing: '0.02em', lineHeight: 1 }}>
+                      Total: ${baseProduct.priceNum + selectedTotal}
+                    </div>
+                  </div>
+              }
+            </div>
+            <div style={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
+              <button onClick={onBack}
+                style={{ padding: '13px 18px', background: 'none', border: `1px solid ${C.steel}`, color: C.muted, fontFamily: "'DM Mono', monospace", fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all 0.2s', minHeight: 44 }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = C.ink; e.currentTarget.style.color = C.ink; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = C.steel; e.currentTarget.style.color = C.muted; }}
+              >← Back</button>
+              <SelectBtn onClick={onContinue} featured>
+                {selected.length === 0 ? 'Skip Accessories' : 'Continue'} →
+              </SelectBtn>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .upsell-banner { padding: 20px !important; }
+          .upsell-pad { padding: 40px 20px !important; }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+// ── View 3: Confirmation ──────────────────────────────────────────────────────
+function ConfirmView({ baseProduct, selected, onBack }) {
+  const [submitted, setSubmitted] = useState(false);
+  const selectedAccs = ACCESSORIES.filter(a => selected.includes(a.id));
+  const total = baseProduct.priceNum + selectedAccs.reduce((s, a) => s + a.price, 0);
+
+  if (submitted) {
+    return (
+      <div style={{ minHeight: '100vh', background: C.offwhite, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 20px' }}>
+        <div style={{ maxWidth: 560, width: '100%', textAlign: 'center' }}>
+          <div style={{ width: 72, height: 72, background: C.red, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 32px' }}>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={C.white} strokeWidth="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+          </div>
+          <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 'clamp(48px, 10vw, 64px)', color: C.ink, margin: '0 0 12px', letterSpacing: '0.02em', lineHeight: 0.9 }}>Order Received.</h2>
+          <p style={{ fontFamily: 'system-ui, sans-serif', fontSize: 15, color: C.muted, lineHeight: 1.8, marginBottom: 40 }}>
+            Thanks for your order. The team at Iron Kitchen Inc. will be in touch within 24 hours to confirm your Batch 01 unit and arrange shipping.
+          </p>
+          <div style={{ background: C.white, border: `1px solid ${C.steel}`, padding: '24px', textAlign: 'left', marginBottom: 32 }}>
+            <Label style={{ display: 'block', marginBottom: 16 }}>Order Summary</Label>
+            <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: 12, borderBottom: `1px solid ${C.steel}`, marginBottom: 12 }}>
+              <span style={{ fontFamily: 'system-ui', fontSize: 14, color: C.ink, fontWeight: 500 }}>{baseProduct.name}</span>
+              <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 12, color: C.ink }}>{baseProduct.price}</span>
+            </div>
+            {selectedAccs.map(a => (
+              <div key={a.id} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+                <span style={{ fontFamily: 'system-ui', fontSize: 13, color: C.muted }}>{a.name}</span>
+                <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 11, color: C.muted }}>${a.price}</span>
+              </div>
+            ))}
+            <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: 16, borderTop: `1px solid ${C.steel}`, marginTop: 8 }}>
+              <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: C.ink }}>Total</span>
+              <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 28, color: C.ink, letterSpacing: '0.02em' }}>${total}</span>
+            </div>
+          </div>
+          <Link to="/" style={{ fontFamily: "'DM Mono', monospace", fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: C.muted, textDecoration: 'none' }}>← Return Home</Link>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ background: C.offwhite, minHeight: '100vh', padding: '80px 40px' }} className="confirm-pad">
+      <div style={{ maxWidth: 660, margin: '0 auto' }}>
+        <div style={{ marginBottom: 48 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+            <div style={{ width: 2, height: 16, background: C.red }} />
+            <Label>Batch 01 — Reserve Your Unit</Label>
+          </div>
+          <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontWeight: 400, fontSize: 'clamp(44px, 6vw, 72px)', color: C.ink, lineHeight: 0.88, margin: 0, letterSpacing: '0.01em' }}>
+            Confirm Order.
+          </h2>
+        </div>
+
+        {/* Order summary */}
+        <div style={{ background: C.white, border: `1px solid ${C.steel}`, marginBottom: 32 }}>
+          <div style={{ padding: '20px 24px', borderBottom: `1px solid ${C.steel}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Label>Order Summary</Label>
+            <button onClick={onBack} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'DM Mono', monospace", fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: C.mid, textDecoration: 'underline', padding: 0, minHeight: 32 }}>Edit</button>
+          </div>
+          <div style={{ padding: '20px 24px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 16, borderBottom: `1px solid ${C.steel}`, marginBottom: 12 }}>
+              <div>
+                <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 24, color: C.ink, letterSpacing: '0.02em', lineHeight: 1 }}>{baseProduct.name}</div>
+                <Label color={C.muted}>{baseProduct.sub}</Label>
+              </div>
+              <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 28, color: C.ink, letterSpacing: '0.02em' }}>{baseProduct.price}</span>
+            </div>
+            {selectedAccs.map(a => (
+              <div key={a.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: `1px solid ${C.tile}` }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <img src={a.img} alt={a.name} style={{ height: 32, width: 32, objectFit: 'contain' }} />
+                  <span style={{ fontFamily: 'system-ui', fontSize: 13, color: C.ink }}>{a.name}</span>
+                </div>
+                <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 11, color: C.ink }}>${a.price}</span>
+              </div>
+            ))}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 16, marginTop: 8 }}>
+              <Label>Total</Label>
+              <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 36, color: C.ink, letterSpacing: '0.02em' }}>${total}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Contact form */}
+        <div style={{ background: C.white, border: `1px solid ${C.steel}`, padding: '28px 24px', marginBottom: 16 }}>
+          <Label style={{ display: 'block', marginBottom: 20 }}>Your Details</Label>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }} className="form-grid">
+            {['First Name', 'Last Name'].map(p => (
+              <div key={p}>
+                <Label color={C.mid} style={{ display: 'block', marginBottom: 6 }}>{p}</Label>
+                <input placeholder={p}
+                  style={{ width: '100%', padding: '12px 14px', border: `1px solid ${C.steel}`, background: C.offwhite, fontFamily: 'system-ui', fontSize: 15, color: C.ink, outline: 'none', boxSizing: 'border-box', minHeight: 48 }}
+                  onFocus={e => e.target.style.borderColor = C.ink}
+                  onBlur={e => e.target.style.borderColor = C.steel}
+                />
+              </div>
+            ))}
+          </div>
+          {[{ p: 'Email Address', type: 'email' }, { p: 'Business / Restaurant (optional)', type: 'text' }].map(f => (
+            <div key={f.p} style={{ marginBottom: 12 }}>
+              <Label color={C.mid} style={{ display: 'block', marginBottom: 6 }}>{f.p}</Label>
+              <input type={f.type} placeholder={f.p}
+                style={{ width: '100%', padding: '12px 14px', border: `1px solid ${C.steel}`, background: C.offwhite, fontFamily: 'system-ui', fontSize: 15, color: C.ink, outline: 'none', boxSizing: 'border-box', minHeight: 48 }}
+                onFocus={e => e.target.style.borderColor = C.ink}
+                onBlur={e => e.target.style.borderColor = C.steel}
+              />
+            </div>
+          ))}
+        </div>
+
+        <div style={{ background: C.tile, border: `1px solid ${C.steel}`, padding: '14px 20px', marginBottom: 24, display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.mid} strokeWidth="1.5" style={{ flexShrink: 0, marginTop: 1 }}><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          <Label color={C.muted} style={{ lineHeight: 1.9 }}>This is a reservation inquiry for Batch 01. The IKI team will contact you within 24 hours to confirm your unit and arrange payment.</Label>
+        </div>
+
+        <div style={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+          <button onClick={onBack}
+            style={{ padding: '15px 24px', background: 'none', border: `1px solid ${C.steel}`, color: C.muted, fontFamily: "'DM Mono', monospace", fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all 0.2s', minHeight: 52 }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = C.ink; e.currentTarget.style.color = C.ink; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = C.steel; e.currentTarget.style.color = C.muted; }}
+          >← Back</button>
+          <button onClick={() => setSubmitted(true)}
+            style={{ flex: 1, padding: '15px 32px', background: C.red, color: C.white, border: 'none', cursor: 'pointer', fontFamily: "'DM Mono', 'IBM Plex Mono', monospace", fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', transition: 'background 0.2s', minHeight: 52 }}
+            onMouseEnter={e => e.currentTarget.style.background = C.redHover}
+            onMouseLeave={e => e.currentTarget.style.background = C.red}
+          >Reserve My Unit →</button>
+        </div>
+      </div>
+
+      <style>{`
+        @media (max-width: 600px) {
+          .confirm-pad { padding: 48px 20px !important; }
+          .form-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+// ── Root ──────────────────────────────────────────────────────────────────────
+export default function Store() {
+  const [view, setView] = useState('storefront');
+  const [baseProduct, setBaseProduct] = useState(null);
+  const [selected, setSelected] = useState([]);
+
+  useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, [view]);
+
+  const handleSelect = (product) => {
+    setBaseProduct(product);
+    setSelected([]);
+    if (product.id === 'IKX-1') {
+      setView('upsell');
+    } else {
+      setView('confirm');
+    }
+  };
+
+  const handleToggle = (id) => {
+    if (id === 'BUNDLE') {
+      setSelected(prev => prev.includes('BUNDLE') ? [] : ['BUNDLE']);
+    } else {
+      setSelected(prev => {
+        const withoutBundle = prev.filter(i => i !== 'BUNDLE');
+        return withoutBundle.includes(id)
+          ? withoutBundle.filter(i => i !== id)
+          : [...withoutBundle, id];
+      });
+    }
+  };
+
+  return (
+    <div>
+      <StoreNav view={view} />
+      {view === 'storefront' && <StorefrontView onSelect={handleSelect} />}
+      {view === 'upsell' && (
+        <UpsellView
+          baseProduct={baseProduct} selected={selected}
+          onToggle={handleToggle}
+          onContinue={() => setView('confirm')}
+          onBack={() => setView('storefront')}
+        />
+      )}
+      {view === 'confirm' && (
+        <ConfirmView
+          baseProduct={baseProduct} selected={selected}
+          onBack={() => baseProduct?.id === 'IKX-1' ? setView('upsell') : setView('storefront')}
+        />
+      )}
     </div>
   );
 }
