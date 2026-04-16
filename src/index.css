@@ -1,36 +1,163 @@
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,900;1,700;1,900&family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --color-cream: #F5F0E8;
-  --color-cream-dark: #EDE6D6;
-  --color-charcoal: #1C1C1A;
-  --color-charcoal-mid: #2E2E2B;
-  --color-charcoal-soft: #3D3D39;
-  --color-amber: #B8722A;
-  --color-amber-light: #D4893A;
-  --color-rust: #8B3A1E;
-  --color-muted: #7A7468;
-  --color-faint: #C4BDB0;
-  --color-border: #D8D0C0;
-  --color-border-dark: #2A2A27;
+  --color-white: #FFFFFF;
+  --color-offwhite: #F8F8F6;
+  --color-tile: #F2F2EE;
+  --color-steel: #E4E4DF;
+  --color-mid: #B0AFA8;
+  --color-muted: #7A7972;
+  --color-ink: #1A1A18;
+  --color-inklight: #2C2C28;
+  --color-black: #0D0D0B;
+  --color-red: #C41E1E;
+  --color-redhover: #A01818;
 
-  /* legacy compat */
-  --color-background-charcoal: #1C1C1A;
-  --color-savor-tangerine: #B8722A;
-  --color-savor-tangerine-warm: #D4893A;
-  --color-red: #B8722A;
-  --color-red-hover: #D4893A;
+  /* Legacy compatibility */
+  --color-background-charcoal: #1A1A18;
+  --color-cream: #F8F8F6;
+  --color-amber: #C41E1E;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
-  background-color: #F5F0E8;
-  color: #1C1C1A;
-  font-family: 'Barlow', sans-serif;
+  background-color: #F8F8F6;
+  color: #1A1A18;
+  font-family: system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
+
+/* Remove default button styles */
+button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Smooth scroll offset for fixed nav */
+[id] {
+  scroll-margin-top: 80px;
+}
+
+/* Selection */
+::selection {
+  background: #C41E1E;
+  color: #FFFFFF;
+}
+
+/* Scrollbar — minimal */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F2F2EE;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #B0AFA8;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #1A1A18;
+}
+
+/* Mobile styles */
+
+@media (max-width: 768px) {
+  nav {
+    padding: 0 16px;
+  }
+
+  .nav-desktop {
+    display: none !important;
+  }
+
+  .nav-mobile-btn {
+    display: flex !important;
+  }
+
+  #navbar-menu {
+    top: 64px;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    background: #FFFFFF;
+    border-bottom: 1px solid #E4E4DF;
+    padding: 24px 16px;
+    display: none;
+  }
+
+  #navbar-menu.active {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  #navbar-menu a {
+    display: block;
+    padding: 12px 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #1A1A18;
+    text-decoration: none;
+    border-bottom: 1px solid #E4E4DF;
+    transition: color 0.2s, border-bottom-color 0.2s;
+  }
+
+  #navbar-menu a:last-child {
+    border-bottom-color: transparent;
+  }
+
+  #navbar-menu a:hover,
+  #navbar-menu a.active {
+    color: #C41E1E;
+    border-bottom-color: #C41E1E;
+  }
+
+  #navbar-menu a.inquire {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #1A1A18;
+    color: #FFFFFF;
+    font-size: 12px;
+    border: none;
+    border-radius: 4px;
+    margin-top: 16px;
+    transition: background 0.2s;
+  }
+
+  #navbar-menu a.inquire:hover {
+    background: #C41E1E;
+  }
+
+  .burger-bar {
+    width: 20px;
+    height: 2px;
+    background: #1A1A18;
+    margin-bottom: 4px;
+    transition: all 0.25s;
+  }
+
+  .nav-mobile-btn.active .burger-bar:first-child {
+    transform: translateY(6px) rotate(45deg);
+  }
+
+  .nav-mobile-btn.active .burger-bar:last-child {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+
+  .nav-mobile-btn.active .burger-bar:nth-child(2) {
+    opacity: 0;
+  }
+}
