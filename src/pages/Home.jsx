@@ -5,7 +5,7 @@ import imgPress from '../assets/press.png';
 import imgSmash from '../assets/smash.png';
 import imgSlim from '../assets/burger-board.png';
 import imgHero from '../assets/hero4.png';
-import imgSchematics from '../assets/schematics2.png';
+import imgSchematics from '../assets/schematics.png';
 
 const C = {
   white: '#FFFFFF',
