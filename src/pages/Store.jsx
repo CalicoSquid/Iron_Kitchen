@@ -74,6 +74,7 @@ const ACCESSORIES = [
     name: 'SlimPress Board',
     sub: 'Single 4oz patty — IKX-1 rail fit',
     price: 65,
+    priceNum: 65,
     img: imgSlim,
   },
   {
@@ -81,6 +82,7 @@ const ACCESSORIES = [
     name: 'SliderPress Board',
     sub: '4× simultaneous slider array',
     price: 65,
+    priceNum: 65,
     img: imgSlider,
   },
   {
@@ -88,6 +90,7 @@ const ACCESSORIES = [
     name: 'HeartPress Board',
     sub: 'Heart-form cutout — same rail fit',
     price: 65,
+    priceNum: 65,
     img: imgHeart,
   },
   {
@@ -95,6 +98,7 @@ const ACCESSORIES = [
     name: 'Full Board Bundle',
     sub: 'All three boards — save $46',
     price: 149,
+    priceNum: 149,
     img: imgBundle,
     badge: 'Best Value',
   },
@@ -116,19 +120,11 @@ function StoreNav({ view }) {
       <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
         <img src={logo} alt="Iron Kitchen Inc." style={{ height: 34 }} />
       </Link>
-
-      {/* Step indicator */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 0 }} className="step-indicator">
         {steps.map((step, i) => (
           <div key={step} style={{ display: 'flex', alignItems: 'center' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0 14px' }}>
-              <div style={{
-                width: 20, height: 20,
-                background: i <= stepIndex ? C.ink : 'transparent',
-                border: `1px solid ${i <= stepIndex ? C.ink : C.steel}`,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                transition: 'all 0.3s', flexShrink: 0,
-              }}>
+              <div style={{ width: 20, height: 20, background: i <= stepIndex ? C.ink : 'transparent', border: `1px solid ${i <= stepIndex ? C.ink : C.steel}`, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s', flexShrink: 0 }}>
                 {i < stepIndex
                   ? <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={C.white} strokeWidth="2.5"><path d="M20 6L9 17l-5-5"/></svg>
                   : <Label style={{ fontSize: 9, color: i <= stepIndex ? C.white : C.mid }}>{i + 1}</Label>
@@ -140,23 +136,37 @@ function StoreNav({ view }) {
           </div>
         ))}
       </div>
-
       <Link to="/" style={{ fontFamily: "'DM Mono', monospace", fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: C.mid, textDecoration: 'none', flexShrink: 0 }}>← Home</Link>
-
-      <style>{`
-        @media (max-width: 640px) {
-          .step-indicator { display: none !important; }
-        }
-      `}</style>
+      <style>{`@media (max-width: 640px) { .step-indicator { display: none !important; } }`}</style>
     </nav>
   );
 }
 
+// ── Shared button ─────────────────────────────────────────────────────────────
+function SelectBtn({ onClick, featured, children, style = {} }) {
+  const [hov, setHov] = useState(false);
+  return (
+    <button onClick={onClick}
+      onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+      style={{
+        padding: '13px 24px',
+        background: featured ? (hov ? C.redHover : C.red) : (hov ? C.inkLight : C.ink),
+        color: C.white, border: 'none', cursor: 'pointer',
+        fontFamily: "'DM Mono', 'IBM Plex Mono', monospace",
+        fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase',
+        transition: 'background 0.2s', flexShrink: 0, minHeight: 44, ...style,
+      }}
+    >{children}</button>
+  );
+}
+
 // ── View 1: Storefront ────────────────────────────────────────────────────────
-function StorefrontView({ onSelect }) {
+function StorefrontView({ onSelect, onSelectAccessory }) {
   return (
     <div style={{ background: C.offwhite, minHeight: '100vh', padding: '80px 40px' }} className="store-pad">
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+
+        {/* Header */}
         <div style={{ marginBottom: 64, paddingBottom: 40, borderBottom: `1px solid ${C.steel}` }} className="store-header">
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
             <div style={{ width: 2, height: 16, background: C.red }} />
@@ -167,10 +177,26 @@ function StorefrontView({ onSelect }) {
           </h1>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 2, background: C.steel }} className="prod-grid">
+        {/* Main products */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 2, background: C.steel, marginBottom: 2 }} className="prod-grid">
           {PRODUCTS.map(p => <StorefrontCard key={p.id} product={p} onSelect={onSelect} />)}
         </div>
 
+        {/* Accessories strip */}
+        <div style={{ marginTop: 48, marginBottom: 2 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{ width: 2, height: 14, background: C.red }} />
+              <Label>IKX-1 Rail Accessories</Label>
+            </div>
+            <Label color={C.mid}>Compatible with IKX-1 — ships separately</Label>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 2, background: C.steel }} className="acc-grid">
+            {ACCESSORIES.map(acc => <AccessoryCard key={acc.id} acc={acc} onSelect={onSelectAccessory} />)}
+          </div>
+        </div>
+
+        {/* Batch note */}
         <div style={{ marginTop: 2, background: C.white, padding: '20px 28px', borderLeft: `3px solid ${C.red}`, display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
           <Label color={C.red}>Batch 01</Label>
           <div style={{ width: 1, height: 14, background: C.steel }} />
@@ -183,6 +209,10 @@ function StorefrontView({ onSelect }) {
           .store-pad { padding: 48px 20px !important; }
           .store-header { margin-bottom: 40px !important; padding-bottom: 32px !important; }
           .prod-grid { grid-template-columns: 1fr !important; }
+          .acc-grid { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+        @media (max-width: 480px) {
+          .acc-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </div>
@@ -193,42 +223,21 @@ function StorefrontCard({ product, onSelect }) {
   const [hov, setHov] = useState(false);
   return (
     <div
-      onMouseEnter={() => setHov(true)}
-      onMouseLeave={() => setHov(false)}
-      style={{
-        background: product.featured ? C.ink : C.white,
-        display: 'flex', flexDirection: 'column',
-        transition: 'box-shadow 0.3s',
-        boxShadow: hov ? '0 24px 48px rgba(0,0,0,0.12)' : 'none',
-        outline: product.featured ? `2px solid ${C.red}` : 'none',
-        outlineOffset: -2,
-      }}
+      onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+      style={{ background: product.featured ? C.ink : C.white, display: 'flex', flexDirection: 'column', transition: 'box-shadow 0.3s', boxShadow: hov ? '0 24px 48px rgba(0,0,0,0.12)' : 'none', outline: product.featured ? `2px solid ${C.red}` : 'none', outlineOffset: -2 }}
     >
-      <div style={{ height: 280, background: product.featured ? '#181816' : C.tile, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 40, position: 'relative' }}
-        className="card-img"
-      >
-        <div style={{ position: 'absolute', top: 16, left: 20 }}>
-          <Label color={product.featured ? 'rgba(255,255,255,0.25)' : C.mid}>{product.id}</Label>
-        </div>
+      <div style={{ height: 280, background: product.featured ? '#181816' : C.tile, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 40, position: 'relative' }}>
+        <div style={{ position: 'absolute', top: 16, left: 20 }}><Label color={product.featured ? 'rgba(255,255,255,0.25)' : C.mid}>{product.id}</Label></div>
         <div style={{ position: 'absolute', top: 16, right: 20 }}>
           <span style={{ background: product.featured ? C.red : C.steel, color: product.featured ? C.white : C.muted, fontFamily: "'DM Mono', monospace", fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', padding: '3px 10px' }}>{product.status}</span>
         </div>
         {product.featured && <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 60%, rgba(196,30,30,0.1) 0%, transparent 65%)', pointerEvents: 'none' }} />}
-        <img src={product.img} alt={product.name}
-          style={{
-            maxHeight: '100%', maxWidth: '100%', objectFit: 'contain',
-            filter: product.featured ? 'brightness(0.9) contrast(1.1)' : 'none',
-            transition: 'transform 0.4s',
-            transform: hov ? 'scale(1.04)' : 'scale(1)',
-          }}
-        />
+        <img src={product.img} alt={product.name} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain', filter: product.featured ? 'brightness(0.9) contrast(1.1)' : 'none', transition: 'transform 0.4s', transform: hov ? 'scale(1.04)' : 'scale(1)' }} />
       </div>
-
-      <div style={{ padding: '32px 28px', flex: 1, display: 'flex', flexDirection: 'column' }} className="card-body">
+      <div style={{ padding: '32px 28px', flex: 1, display: 'flex', flexDirection: 'column' }}>
         <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontWeight: 400, fontSize: 52, color: product.featured ? C.white : C.ink, margin: '0 0 2px', letterSpacing: '0.02em', lineHeight: 1 }}>{product.name}</h2>
         <Label color={product.featured ? 'rgba(255,255,255,0.3)' : C.mid} style={{ display: 'block', marginBottom: 16 }}>{product.sub}</Label>
         <p style={{ fontFamily: 'system-ui, sans-serif', fontSize: 14, color: product.featured ? 'rgba(255,255,255,0.45)' : C.muted, lineHeight: 1.8, margin: '0 0 28px', flex: 1 }}>{product.desc}</p>
-
         <div style={{ marginBottom: 28 }}>
           {product.specs.map((s, i) => (
             <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderTop: `1px solid ${product.featured ? 'rgba(255,255,255,0.07)' : C.steel}` }}>
@@ -237,7 +246,6 @@ function StorefrontCard({ product, onSelect }) {
             </div>
           ))}
         </div>
-
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 24, borderTop: `1px solid ${product.featured ? 'rgba(255,255,255,0.1)' : C.steel}`, gap: 12, flexWrap: 'wrap' }}>
           <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 48, color: product.featured ? C.white : C.ink, lineHeight: 1, letterSpacing: '0.02em' }}>{product.price}</span>
           <SelectBtn onClick={() => onSelect(product)} featured={product.featured}>
@@ -249,22 +257,35 @@ function StorefrontCard({ product, onSelect }) {
   );
 }
 
-function SelectBtn({ onClick, featured, children, style = {} }) {
+function AccessoryCard({ acc, onSelect }) {
   const [hov, setHov] = useState(false);
   return (
-    <button onClick={onClick}
+    <div
       onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-      style={{
-        padding: '13px 24px',
-        background: featured ? (hov ? C.redHover : C.red) : (hov ? C.inkLight : C.ink),
-        color: C.white, border: 'none', cursor: 'pointer',
-        fontFamily: "'DM Mono', 'IBM Plex Mono', monospace",
-        fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase',
-        transition: 'background 0.2s', flexShrink: 0,
-        minHeight: 44,
-        ...style,
-      }}
-    >{children}</button>
+      style={{ background: hov ? C.white : C.tile, display: 'flex', flexDirection: 'column', transition: 'background 0.2s', cursor: 'pointer' }}
+    >
+      {/* Image */}
+      <div style={{ height: 140, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px 20px', position: 'relative', background: hov ? C.offwhite : C.tile, transition: 'background 0.2s' }}>
+        {acc.badge && (
+          <div style={{ position: 'absolute', top: 10, right: 10 }}>
+            <span style={{ background: C.red, color: C.white, fontFamily: "'DM Mono', monospace", fontSize: 8, letterSpacing: '0.2em', textTransform: 'uppercase', padding: '2px 8px' }}>{acc.badge}</span>
+          </div>
+        )}
+        <img src={acc.img} alt={acc.name} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain', filter: 'grayscale(0.15)', transition: 'transform 0.3s', transform: hov ? 'scale(1.06)' : 'scale(1)' }} />
+      </div>
+
+      {/* Info */}
+      <div style={{ padding: '16px 18px 20px', flex: 1, display: 'flex', flexDirection: 'column', borderTop: `1px solid ${C.steel}` }}>
+        <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontWeight: 400, fontSize: 22, color: C.ink, letterSpacing: '0.02em', lineHeight: 1, marginBottom: 4 }}>{acc.name}</div>
+        <Label color={C.muted} style={{ fontSize: 9, marginBottom: 16, flex: 1 }}>{acc.sub}</Label>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 14, borderTop: `1px solid ${C.steel}` }}>
+          <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 26, color: C.ink, letterSpacing: '0.02em', lineHeight: 1 }}>${acc.price}</span>
+          <button onClick={() => onSelect(acc)}
+            style={{ padding: '8px 14px', background: hov ? C.ink : 'transparent', border: `1px solid ${hov ? C.ink : C.steel}`, color: hov ? C.white : C.ink, fontFamily: "'DM Mono', monospace", fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all 0.2s' }}
+          >Order →</button>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -277,7 +298,6 @@ function UpsellView({ baseProduct, selected, onToggle, onContinue, onBack }) {
 
   return (
     <div style={{ background: C.offwhite, minHeight: '100vh' }}>
-      {/* Top banner */}
       <div style={{ background: C.ink, padding: '28px 40px', borderBottom: `2px solid ${C.red}` }} className="upsell-banner">
         <div style={{ maxWidth: 860, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
@@ -302,9 +322,7 @@ function UpsellView({ baseProduct, selected, onToggle, onContinue, onBack }) {
             <div style={{ width: 2, height: 16, background: C.red }} />
             <Label>Complete Your System</Label>
           </div>
-          <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontWeight: 400, fontSize: 'clamp(44px, 6vw, 72px)', color: C.ink, lineHeight: 0.88, margin: '0 0 16px', letterSpacing: '0.01em' }}>
-            Add Rail Boards.
-          </h2>
+          <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontWeight: 400, fontSize: 'clamp(44px, 6vw, 72px)', color: C.ink, lineHeight: 0.88, margin: '0 0 16px', letterSpacing: '0.01em' }}>Add Rail Boards.</h2>
           <p style={{ fontFamily: 'system-ui, sans-serif', fontSize: 15, color: C.muted, lineHeight: 1.7, maxWidth: 520, margin: 0 }}>
             The IKX-1 rail system accepts precision-fit boards for consistent patty forming before the press. Ships with your order.
           </p>
@@ -315,35 +333,14 @@ function UpsellView({ baseProduct, selected, onToggle, onContinue, onBack }) {
             const isSelected = selected.includes(acc.id);
             return (
               <div key={acc.id} onClick={() => onToggle(acc.id)}
-                style={{
-                  background: isSelected ? C.white : C.tile,
-                  border: `1px solid ${isSelected ? C.ink : C.steel}`,
-                  padding: '20px 20px',
-                  cursor: 'pointer',
-                  display: 'flex', alignItems: 'center', gap: 16,
-                  transition: 'all 0.2s',
-                  outline: isSelected ? `2px solid ${C.red}` : 'none',
-                  outlineOffset: -2,
-                  minHeight: 80,
-                }}
+                style={{ background: isSelected ? C.white : C.tile, border: `1px solid ${isSelected ? C.ink : C.steel}`, padding: '20px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 16, transition: 'all 0.2s', outline: isSelected ? `2px solid ${C.red}` : 'none', outlineOffset: -2, minHeight: 80 }}
               >
-                {/* Checkbox */}
-                <div style={{
-                  width: 22, height: 22, minWidth: 22,
-                  background: isSelected ? C.red : 'transparent',
-                  border: `1px solid ${isSelected ? C.red : C.steel}`,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  transition: 'all 0.2s',
-                }}>
+                <div style={{ width: 22, height: 22, minWidth: 22, background: isSelected ? C.red : 'transparent', border: `1px solid ${isSelected ? C.red : C.steel}`, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s' }}>
                   {isSelected && <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={C.white} strokeWidth="3"><path d="M20 6L9 17l-5-5"/></svg>}
                 </div>
-
-                {/* Image */}
                 <div style={{ width: 52, height: 52, minWidth: 52, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <img src={acc.img} alt={acc.name} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', filter: 'grayscale(0.2)' }} />
                 </div>
-
-                {/* Info */}
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3, flexWrap: 'wrap' }}>
                     <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 20, color: C.ink, letterSpacing: '0.02em', lineHeight: 1 }}>{acc.name}</span>
@@ -351,8 +348,6 @@ function UpsellView({ baseProduct, selected, onToggle, onContinue, onBack }) {
                   </div>
                   <Label color={C.muted} style={{ fontSize: 9 }}>{acc.sub}</Label>
                 </div>
-
-                {/* Price */}
                 <div style={{ textAlign: 'right', flexShrink: 0 }}>
                   <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 26, color: isSelected ? C.red : C.ink, letterSpacing: '0.02em', lineHeight: 1, transition: 'color 0.2s' }}>+${acc.price}</div>
                   <Label color={isSelected ? C.red : C.mid} style={{ fontSize: 9 }}>{isSelected ? 'Selected ✓' : 'Add'}</Label>
@@ -362,7 +357,6 @@ function UpsellView({ baseProduct, selected, onToggle, onContinue, onBack }) {
           })}
         </div>
 
-        {/* Summary + CTA */}
         <div style={{ background: C.white, border: `1px solid ${C.steel}`, padding: '24px 20px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
             <div>
@@ -370,9 +364,7 @@ function UpsellView({ baseProduct, selected, onToggle, onContinue, onBack }) {
                 ? <Label color={C.mid}>No accessories selected</Label>
                 : <div>
                     <Label color={C.muted} style={{ display: 'block', marginBottom: 4 }}>{selected.length} accessory{selected.length > 1 ? 's' : ''} added</Label>
-                    <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 28, color: C.ink, letterSpacing: '0.02em', lineHeight: 1 }}>
-                      Total: ${baseProduct.priceNum + selectedTotal}
-                    </div>
+                    <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 28, color: C.ink, letterSpacing: '0.02em', lineHeight: 1 }}>Total: ${baseProduct.priceNum + selectedTotal}</div>
                   </div>
               }
             </div>
@@ -430,11 +422,11 @@ function ConfirmView({ baseProduct, selected, onBack }) {
               </div>
             ))}
             <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: 16, borderTop: `1px solid ${C.steel}`, marginTop: 8 }}>
-              <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: C.ink }}>Total</span>
+              <Label>Total</Label>
               <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 28, color: C.ink, letterSpacing: '0.02em' }}>${total}</span>
             </div>
           </div>
-          <Link to="/" style={{ fontFamily: "'DM Mono', monospace", fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: C.muted, textDecoration: 'none' }}>← Return Home</Link>
+          <Link to="/" style={{ fontFamily: "'DM Mono', monospace", fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: C.mid, textDecoration: 'none' }}>← Return Home</Link>
         </div>
       </div>
     );
@@ -453,7 +445,6 @@ function ConfirmView({ baseProduct, selected, onBack }) {
           </h2>
         </div>
 
-        {/* Order summary */}
         <div style={{ background: C.white, border: `1px solid ${C.steel}`, marginBottom: 32 }}>
           <div style={{ padding: '20px 24px', borderBottom: `1px solid ${C.steel}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Label>Order Summary</Label>
@@ -483,29 +474,20 @@ function ConfirmView({ baseProduct, selected, onBack }) {
           </div>
         </div>
 
-        {/* Contact form */}
         <div style={{ background: C.white, border: `1px solid ${C.steel}`, padding: '28px 24px', marginBottom: 16 }}>
           <Label style={{ display: 'block', marginBottom: 20 }}>Your Details</Label>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }} className="form-grid">
             {['First Name', 'Last Name'].map(p => (
               <div key={p}>
                 <Label color={C.mid} style={{ display: 'block', marginBottom: 6 }}>{p}</Label>
-                <input placeholder={p}
-                  style={{ width: '100%', padding: '12px 14px', border: `1px solid ${C.steel}`, background: C.offwhite, fontFamily: 'system-ui', fontSize: 15, color: C.ink, outline: 'none', boxSizing: 'border-box', minHeight: 48 }}
-                  onFocus={e => e.target.style.borderColor = C.ink}
-                  onBlur={e => e.target.style.borderColor = C.steel}
-                />
+                <input placeholder={p} style={{ width: '100%', padding: '12px 14px', border: `1px solid ${C.steel}`, background: C.offwhite, fontFamily: 'system-ui', fontSize: 15, color: C.ink, outline: 'none', boxSizing: 'border-box', minHeight: 48 }} onFocus={e => e.target.style.borderColor = C.ink} onBlur={e => e.target.style.borderColor = C.steel} />
               </div>
             ))}
           </div>
           {[{ p: 'Email Address', type: 'email' }, { p: 'Business / Restaurant (optional)', type: 'text' }].map(f => (
             <div key={f.p} style={{ marginBottom: 12 }}>
               <Label color={C.mid} style={{ display: 'block', marginBottom: 6 }}>{f.p}</Label>
-              <input type={f.type} placeholder={f.p}
-                style={{ width: '100%', padding: '12px 14px', border: `1px solid ${C.steel}`, background: C.offwhite, fontFamily: 'system-ui', fontSize: 15, color: C.ink, outline: 'none', boxSizing: 'border-box', minHeight: 48 }}
-                onFocus={e => e.target.style.borderColor = C.ink}
-                onBlur={e => e.target.style.borderColor = C.steel}
-              />
+              <input type={f.type} placeholder={f.p} style={{ width: '100%', padding: '12px 14px', border: `1px solid ${C.steel}`, background: C.offwhite, fontFamily: 'system-ui', fontSize: 15, color: C.ink, outline: 'none', boxSizing: 'border-box', minHeight: 48 }} onFocus={e => e.target.style.borderColor = C.ink} onBlur={e => e.target.style.borderColor = C.steel} />
             </div>
           ))}
         </div>
@@ -528,7 +510,6 @@ function ConfirmView({ baseProduct, selected, onBack }) {
           >Reserve My Unit →</button>
         </div>
       </div>
-
       <style>{`
         @media (max-width: 600px) {
           .confirm-pad { padding: 48px 20px !important; }
@@ -550,11 +531,14 @@ export default function Store() {
   const handleSelect = (product) => {
     setBaseProduct(product);
     setSelected([]);
-    if (product.id === 'IKX-1') {
-      setView('upsell');
-    } else {
-      setView('confirm');
-    }
+    setView(product.id === 'IKX-1' ? 'upsell' : 'confirm');
+  };
+
+  // Accessory purchased standalone — skip upsell, go straight to confirm
+  const handleSelectAccessory = (acc) => {
+    setBaseProduct({ ...acc, price: `$${acc.price}`, sub: acc.sub });
+    setSelected([]);
+    setView('confirm');
   };
 
   const handleToggle = (id) => {
@@ -563,9 +547,7 @@ export default function Store() {
     } else {
       setSelected(prev => {
         const withoutBundle = prev.filter(i => i !== 'BUNDLE');
-        return withoutBundle.includes(id)
-          ? withoutBundle.filter(i => i !== id)
-          : [...withoutBundle, id];
+        return withoutBundle.includes(id) ? withoutBundle.filter(i => i !== id) : [...withoutBundle, id];
       });
     }
   };
@@ -573,21 +555,9 @@ export default function Store() {
   return (
     <div>
       <StoreNav view={view} />
-      {view === 'storefront' && <StorefrontView onSelect={handleSelect} />}
-      {view === 'upsell' && (
-        <UpsellView
-          baseProduct={baseProduct} selected={selected}
-          onToggle={handleToggle}
-          onContinue={() => setView('confirm')}
-          onBack={() => setView('storefront')}
-        />
-      )}
-      {view === 'confirm' && (
-        <ConfirmView
-          baseProduct={baseProduct} selected={selected}
-          onBack={() => baseProduct?.id === 'IKX-1' ? setView('upsell') : setView('storefront')}
-        />
-      )}
+      {view === 'storefront' && <StorefrontView onSelect={handleSelect} onSelectAccessory={handleSelectAccessory} />}
+      {view === 'upsell' && <UpsellView baseProduct={baseProduct} selected={selected} onToggle={handleToggle} onContinue={() => setView('confirm')} onBack={() => setView('storefront')} />}
+      {view === 'confirm' && <ConfirmView baseProduct={baseProduct} selected={selected} onBack={() => baseProduct?.id === 'IKX-1' ? setView('upsell') : setView('storefront')} />}
     </div>
   );
 }
