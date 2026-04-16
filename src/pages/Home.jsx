@@ -81,7 +81,7 @@ function Navbar() {
           }}
         >
           <img
-            src={scrolled ? logo : logoW}
+            src={scrolled ? logo : logo}
             alt="Iron Kitchen Inc."
             style={{ height: 36, transition: 'opacity 0.3s' }}
           />
